@@ -411,7 +411,7 @@
   // ============================================
   // CẤU HÌNH API - LIÊN KẾT VỚI GOOGLE SHEET
   // ============================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbzbErep5M0-9P7ow4X1K7m5ZLnHBN9Hi60Tp247vAPn3MNentilssNnsCxxGJb0v2BH8Q/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxMpHKJLL1dyPRMusBoxmpWW0OAyD2Md9CxQNORjgaSBr__2gmqG3PMaZ8Ynw7eQMmIYA/exec";
   
   let PAYMENT_STUDENTS = new Map(); 
   let CURRENT_STUDENTS = []; 
@@ -453,11 +453,11 @@
       if(r.data && r.data.tuition_amount_default) document.getElementById('hp-def').value = r.data.tuition_amount_default;
     } catch(e) { console.error(e); }
 
-    loadHS();
-    updateDashboardStats();
+    await Promise.all([loadHS(), updateDashboardStats()]);
   }
 
   function escapeHtml(value) { return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;'); }
+  function escapeJsSingle(value) { return String(value ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/[\r\n]+/g, ' '); }
   function todayLocalISO() { const d = new Date(); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
   function initDateSel(m,y) { const ms=document.getElementById(m); for(let i=1;i<=12;i++) ms.add(new Option("Tháng "+i,i)); ms.value=new Date().getMonth()+1; const ys=document.getElementById(y); const cy=new Date().getFullYear(); ys.add(new Option(cy,cy)); ys.add(new Option(cy-1,cy-1)); ys.add(new Option(cy+1,cy+1)); ys.value=cy; }
   function updateLop(sk,sl) { const k=document.getElementById(sk).value; const l=document.getElementById(sl); l.innerHTML=`<option value="">-- Chọn --</option>`; if(!k) return; const kv=parseInt(k); if(kv>=6&&kv<=9) ['A','B','C'].forEach(x=>l.add(new Option("Lớp "+x,x))); else l.add(new Option("Lớp Chung","Chung")); }
@@ -481,36 +481,39 @@
   async function updateDashboardStats() {
     try {
       const m = new Date().getMonth() + 1; const y = new Date().getFullYear();
-      const r = await callAPI('getStatistics', {month: m, year: y, grade: '', className: ''});
+      const r = await callAPI('getDashboardStats', {month: m, year: y});
       document.getElementById('dash-total-hs').innerText = r.data.total_students;
       document.getElementById('dash-paid').innerText = r.data.paid_count;
       document.getElementById('dash-unpaid').innerText = r.data.unpaid_count;
-    } catch(e) {}
+    } catch(e) { console.error(e); }
   }
 
-  // HỌC SINH
-  function loadHS() { 
-    loading(true); 
-    const term=document.getElementById('search-hs').value, g=document.getElementById('hs-khoi').value, c=document.getElementById('hs-lop').value; 
-    callAPI('getStudents', {term, grade: g, className: c}).then(r => { 
-      loading(false); CURRENT_STUDENTS=r.data; const tb=document.getElementById('list-hs'); 
-      if(!r.data.length) return tb.innerHTML='<tr><td colspan="7" style="text-align:center">Trống</td></tr>'; 
-      tb.innerHTML=r.data.map((s,i)=>`<tr>
+    // HỌC SINH
+  async function loadHS() {
+    loading(true);
+    const term=document.getElementById('search-hs').value, g=document.getElementById('hs-khoi').value, c=document.getElementById('hs-lop').value;
+    try {
+      const r = await callAPI('getStudents', {term, grade: g, className: c});
+      CURRENT_STUDENTS = r.data || [];
+      const tb=document.getElementById('list-hs');
+      if(!CURRENT_STUDENTS.length) { tb.innerHTML='<tr><td colspan="7" style="text-align:center">Trống</td></tr>'; return; }
+      tb.innerHTML=CURRENT_STUDENTS.map((s,i)=>`<tr>
         <td data-label="STT">${i+1}</td>
         <td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td>
-        <td data-label="Lớp"><span class="badge badge-success">K${s.grade}-${s.class}</span></td>
+        <td data-label="Lớp"><span class="badge badge-success">K${escapeHtml(s.grade)}-${escapeHtml(s.class)}</span></td>
         <td data-label="SĐT">${escapeHtml(s.parent_phone || '--')}</td>
         <td data-label="Tên Zalo">${escapeHtml(s.zalo_name || '--')}</td>
         <td data-label="Email">${escapeHtml(s.email||'--')}</td>
         <td data-label="Thao tác" style="text-align:center">
-          <button class="btn-icon edit" onclick="editHS('${s.student_id}')" title="Sửa"><i class="bi bi-pencil-fill"></i></button>
-          <button class="btn-icon delete" onclick="delHS('${s.student_id}')" title="Xóa"><i class="bi bi-trash-fill"></i></button>
+          <button class="btn-icon edit" onclick="editHS('${escapeJsSingle(s.student_id)}')" title="Sửa"><i class="bi bi-pencil-fill"></i></button>
+          <button class="btn-icon delete" onclick="delHS('${escapeJsSingle(s.student_id)}')" title="Xóa"><i class="bi bi-trash-fill"></i></button>
         </td>
-      </tr>`).join(''); 
-      updateDashboardStats();
-    }).catch(showError);
+      </tr>`).join('');
+    } catch(e) { showError(e); }
+    finally { loading(false); }
   }
-  function openModal() {
+
+    function openModal() {
     document.getElementById('modal-hs').style.display='flex';
     document.getElementById('modal-title').innerText="Thêm Học Sinh";
     document.getElementById('m-id').value="";
@@ -561,11 +564,11 @@
       if(r.success) {
         document.getElementById('modal-hs').style.display='none';
         showToast(id ? "Đã cập nhật!" : "Đã thêm mới! Ngày nhập học được tính từ hôm nay.");
-        loadHS();
+        loadHS(); updateDashboardStats();
       }
     }).catch(e => { loading(false); showError(e); });
   }
-  function delHS(id) { if(confirm("CẢNH BÁO: Bạn có chắc chắn xóa học sinh này?")) { loading(true); callAPI('deleteStudent', {id: id}, 'POST').then(r=>{ loading(false); if(r.success){ showToast("Đã xóa!"); loadHS();} }).catch(showError); } }
+  function delHS(id) { if(confirm("CẢNH BÁO: Bạn có chắc chắn xóa học sinh này?")) { loading(true); callAPI('deleteStudent', {id: id}, 'POST').then(r=>{ loading(false); if(r.success){ showToast("Đã xóa!"); loadHS(); updateDashboardStats();} }).catch(showError); } }
 
   // ĐIỂM DANH
   function loadDD() {
@@ -675,70 +678,84 @@
   function loadMaterials() { loading(true); callAPI('getMaterialStatus', {grade: document.getElementById('tl-khoi').value, className: document.getElementById('tl-lop').value}).then(r=>{ loading(false); document.getElementById('list-tl').innerHTML=r.data.map((s,i)=>`<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp"><span class="badge badge-success">${s.class_info}</span></td>${[1,2,3,4,5,6].map(j=>`<td data-label="Đợt ${j}" style="text-align:center"><input type="checkbox" class="cb-material" style="width:20px;height:20px" ${s['batch'+j]?'checked':''} onchange="toggleMaterial('${s.student_id}',${j},this.checked)"></td>`).join('')}</tr>`).join(''); }).catch(showError); }
   function toggleMaterial(id,b,c) { callAPI('updateMaterialStatus', {id: id, batch: b, checked: c}, 'POST').then(r=>{ if(!r.success) { showToast(r.message, 'error'); loadMaterials(); } }); }
   
-  function loadStats() { 
-    loading(true); 
-    const m = document.getElementById('tk-thang').value, y = document.getElementById('tk-nam').value, k = document.getElementById('tk-khoi').value, l = document.getElementById('tk-lop').value; 
-    Promise.all([ callAPI('getStatistics', {month: m, year: y, grade: k, className: l}), callAPI('getLessonReport', {month: m, year: y, grade: k, className: l}) ]).then(([res, lessonRes]) => { 
-      loading(false); 
-      const r = res.data; 
-      
-      const setSafeText = (id, text) => { const el = document.getElementById(id); if(el) el.innerText = text; };
-      
-      setSafeText('dash-total-hs', r.total_students);
-      setSafeText('report-revenue', (r.total_revenue || 0).toLocaleString('vi-VN') + ' đ');
-      setSafeText('dash-paid', r.paid_count);
-      setSafeText('dash-unpaid', r.unpaid_count);
+  async function loadStats() {
+    loading(true);
+    const m = document.getElementById('tk-thang').value, y = document.getElementById('tk-nam').value, k = document.getElementById('tk-khoi').value, l = document.getElementById('tk-lop').value;
+    try {
+      const bundle = await callAPI('getReportBundle', {month: m, year: y, grade: k, className: l});
+      const r = (bundle.data && bundle.data.statistics) || {};
+      const lessonData = (bundle.data && bundle.data.lesson_report) || [];
+      const setSafeText = (id, value) => { const el=document.getElementById(id); if(el) el.innerText=value; };
+      setSafeText('dash-total-hs', r.total_students || 0);
+      setSafeText('report-revenue', Number(r.total_revenue || 0).toLocaleString('vi-VN') + ' đ');
+      setSafeText('dash-paid', r.paid_count || 0);
+      setSafeText('dash-unpaid', r.unpaid_count || 0);
       setSafeText('prev-month-label', r.prev_month_label || 'Tháng trước');
-      
+
+      const paidList = Array.isArray(r.paid_list) ? r.paid_list : [];
+      const cashList = paidList.filter(s => s.method === 'TM');
+      const transferList = paidList.filter(s => s.method === 'CK');
+      const unpaidList = Array.isArray(r.unpaid_list) ? r.unpaid_list : [];
+      const debtList = Array.isArray(r.unpaid_two_months_list) ? r.unpaid_two_months_list : [];
+      const absentList = Array.isArray(r.absent_list) ? r.absent_list : [];
+
       const tbCash = document.getElementById('list-tk-paid-cash');
-      if(tbCash) {
-        if (r.paid_list.filter(s => s.method === 'TM').length === 0) tbCash.innerHTML = '<tr><td colspan="5" style="text-align:center">Trống.</td></tr>'; 
-        else tbCash.innerHTML = r.paid_list.filter(s => s.method === 'TM').map((s,i) => `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp"><span class="badge badge-success">${s.class_info}</span></td><td data-label="Ngày nộp">${(s.paid_at||'').split(' ')[0]}</td><td data-label="Số tiền">${Number(s.amount).toLocaleString('vi-VN')}</td></tr>`).join(''); 
-      }
-      
+      if(tbCash) tbCash.innerHTML = cashList.length ? cashList.map((s,i) => `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp"><span class="badge badge-success">${escapeHtml(s.class_info)}</span></td><td data-label="Ngày nộp">${escapeHtml((s.paid_at||'').split(' ')[0])}</td><td data-label="Số tiền">${Number(s.amount||0).toLocaleString('vi-VN')}</td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center">Trống.</td></tr>';
+
       const tbTransfer = document.getElementById('list-tk-transfer');
-      if(tbTransfer) {
-        if (r.paid_list.filter(s => s.method === 'CK').length === 0) tbTransfer.innerHTML = '<tr><td colspan="6" style="text-align:center">Trống.</td></tr>'; 
-        else tbTransfer.innerHTML = r.paid_list.filter(s => s.method === 'CK').map((s,i) => `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp" style="text-align:center"><span class="badge badge-success">${s.class_info}</span></td><td data-label="Số tiền" style="text-align:right; font-weight:600; color:var(--primary)">${Number(s.amount).toLocaleString('vi-VN')}</td><td data-label="Ngày đóng" style="text-align:center">${(s.paid_at||'').split(' ')[0]}</td><td data-label="Ghi chú">${escapeHtml(s.note || '')}</td></tr>`).join(''); 
-      }
-      
-      const tbUnpaid = document.getElementById('list-tk'); 
+      if(tbTransfer) tbTransfer.innerHTML = transferList.length ? transferList.map((s,i) => `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp" style="text-align:center"><span class="badge badge-success">${escapeHtml(s.class_info)}</span></td><td data-label="Số tiền" style="text-align:right; font-weight:600; color:var(--primary)">${Number(s.amount||0).toLocaleString('vi-VN')}</td><td data-label="Ngày đóng" style="text-align:center">${escapeHtml((s.paid_at||'').split(' ')[0])}</td><td data-label="Ghi chú">${escapeHtml(s.note || '')}</td></tr>`).join('') : '<tr><td colspan="6" style="text-align:center">Trống.</td></tr>';
+
+      const tbUnpaid = document.getElementById('list-tk');
       if(tbUnpaid) {
-        if (r.unpaid_list.length === 0) tbUnpaid.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--success); font-weight:bold"><i class="bi bi-check-circle"></i> Tất cả đã đóng tiền.</td></tr>'; 
-        else tbUnpaid.innerHTML = r.unpaid_list.map((s,i) => {
+        if (!unpaidList.length) tbUnpaid.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--success); font-weight:bold"><i class="bi bi-check-circle"></i> Tất cả đã đóng tiền.</td></tr>';
+        else tbUnpaid.innerHTML = unpaidList.map((s,i) => {
           const contact = [s.parent_phone, s.zalo_name].filter(Boolean).map(escapeHtml).join('<br>') || '--';
           const fee = Number(s.expected_fee || 0);
-          return `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp"><span class="badge badge-success">${escapeHtml(s.class_info)}</span></td><td data-label="Liên hệ">${contact}</td><td data-label="Số tiền" style="font-weight:700;color:var(--danger)">${fee.toLocaleString('vi-VN')} đ</td><td data-label="Nhắc" style="text-align:center"><button class="btn-icon edit" onclick="nhacHocPhiBaoCaoCaNhan('${s.student_id}')" title="Nhắc học phí qua Zalo"><i class="bi bi-bell-fill"></i></button></td></tr>`;
-        }).join(''); 
+          return `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp"><span class="badge badge-success">${escapeHtml(s.class_info)}</span></td><td data-label="Liên hệ">${contact}</td><td data-label="Số tiền" style="font-weight:700;color:var(--danger)">${fee.toLocaleString('vi-VN')} đ</td><td data-label="Nhắc" style="text-align:center"><button class="btn-icon edit" onclick="nhacHocPhiBaoCaoCaNhan('${escapeJsSingle(s.student_id)}')" title="Nhắc học phí qua Zalo"><i class="bi bi-bell-fill"></i></button></td></tr>`;
+        }).join('');
       }
-      
-      const tbDebt = document.getElementById('list-tk-2m'); 
-      if(tbDebt) {
-        if (!r.unpaid_two_months_list || r.unpaid_two_months_list.length === 0) tbDebt.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--success)">Không có.</td></tr>'; 
-        else tbDebt.innerHTML = r.unpaid_two_months_list.map((s,i) => `<tr style="background:#FEF2F2"><td data-label="STT">${i+1}</td><td data-label="Họ tên"><b style="color:var(--danger)">${escapeHtml(s.name)}</b></td><td data-label="Lớp">${s.class_info}</td><td data-label="SĐT">${s.parent_phone}</td></tr>`).join(''); 
-      }
-      
-      const tbAbsent = document.getElementById('list-tk-absent'); 
-      if(tbAbsent) {
-        if (!r.absent_list || r.absent_list.length === 0) tbAbsent.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--success)">Không có.</td></tr>'; 
-        else tbAbsent.innerHTML = r.absent_list.map((s,i) => `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên"><b style="color:var(--warning)">${escapeHtml(s.name)}</b></td><td data-label="Lớp">${s.class_info}</td><td data-label="SĐT">${s.parent_phone}</td><td data-label="Vắng" style="text-align:center;font-weight:bold;color:var(--danger)">${s.absent_count} buổi</td></tr>`).join(''); 
-      }
-      
-      const tbLesson = document.getElementById('list-tk-lesson'); 
+
+      const tbDebt = document.getElementById('list-tk-2m');
+      if(tbDebt) tbDebt.innerHTML = debtList.length ? debtList.map((s,i) => `<tr style="background:#FEF2F2"><td data-label="STT">${i+1}</td><td data-label="Họ tên"><b style="color:var(--danger)">${escapeHtml(s.name)}</b></td><td data-label="Lớp">${escapeHtml(s.class_info)}</td><td data-label="SĐT">${escapeHtml(s.parent_phone || '--')}</td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center; color:var(--success)">Không có.</td></tr>';
+
+      const tbAbsent = document.getElementById('list-tk-absent');
+      if(tbAbsent) tbAbsent.innerHTML = absentList.length ? absentList.map((s,i) => `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên"><b style="color:var(--warning)">${escapeHtml(s.name)}</b></td><td data-label="Lớp">${escapeHtml(s.class_info)}</td><td data-label="SĐT">${escapeHtml(s.parent_phone || '--')}</td><td data-label="Vắng" style="text-align:center;font-weight:bold;color:var(--danger)">${Number(s.absent_count||0)} buổi${s.absent_dates ? `<div style="font-size:11px;font-weight:500;color:var(--text-muted);margin-top:3px">${escapeHtml(s.absent_dates)}</div>` : ''}</td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center; color:var(--success)">Không có.</td></tr>';
+
+      const tbLesson = document.getElementById('list-tk-lesson');
       if(tbLesson) {
-        if(lessonRes.data && lessonRes.data.length) tbLesson.innerHTML = lessonRes.data.map((item, i) => {
-          const zaloName = item.zalo_name || '';
+        if(lessonData.length) tbLesson.innerHTML = lessonData.map((item, i) => {
+          const zaloName = String(item.zalo_name || '').trim();
+          const g = escapeJsSingle(item.grade), c = escapeJsSingle(item.class_code), z = escapeJsSingle(zaloName);
+          const groupCell = zaloName
+            ? `<span>${escapeHtml(zaloName)}</span> <button class="btn-icon edit" style="width:30px;height:30px;font-size:12px" onclick="configureClassZalo('${g}','${c}','${z}')" title="Sửa tên nhóm Zalo"><i class="bi bi-pencil-fill"></i></button>`
+            : '<span style="color:var(--text-muted)">--</span>';
           const action = zaloName
-            ? `<button class="btn btn-primary" style="height:38px;padding:0 14px;margin:auto" onclick="sendLessonReport('${item.grade}','${item.class_code}')"><i class="bi bi-send-fill"></i> Nhắn</button>`
-            : '<span style="color:var(--text-muted);font-size:12px">Chưa cấu hình</span>';
-          return `<tr><td data-label="STT">${i+1}</td><td data-label="Lớp" style="font-weight:700; color:var(--primary-dark)">${escapeHtml(item.class_name)}</td><td data-label="Số buổi" style="text-align:center; font-weight:700">${item.total_sessions}</td><td data-label="Chi tiết">${escapeHtml(item.dates_str)}</td><td data-label="Nhóm Zalo" style="font-size:13px">${zaloName ? escapeHtml(zaloName) : '--'}</td><td data-label="Gửi" style="text-align:center">${action}</td></tr>`;
-        }).join(''); 
-        else tbLesson.innerHTML = '<tr><td colspan="6" style="text-align:center">Chưa có dữ liệu</td></tr>'; 
+            ? `<button class="btn btn-primary" style="height:38px;padding:0 14px;margin:auto" onclick="sendLessonReport('${g}','${c}')"><i class="bi bi-send-fill"></i> Nhắn</button>`
+            : `<button class="btn btn-warning" style="height:38px;padding:0 12px;margin:auto" onclick="configureClassZalo('${g}','${c}','')"><i class="bi bi-plus-circle"></i> Thêm nhóm Zalo</button>`;
+          return `<tr><td data-label="STT">${i+1}</td><td data-label="Lớp" style="font-weight:700; color:var(--primary-dark)">${escapeHtml(item.class_name)}</td><td data-label="Số buổi" style="text-align:center; font-weight:700">${Number(item.total_sessions||0)}</td><td data-label="Chi tiết">${escapeHtml(item.dates_str||'')}</td><td data-label="Nhóm Zalo" style="font-size:13px">${groupCell}</td><td data-label="Gửi" style="text-align:center">${action}</td></tr>`;
+        }).join('');
+        else tbLesson.innerHTML = '<tr><td colspan="6" style="text-align:center">Chưa có dữ liệu</td></tr>';
       }
-    }).catch(showError); 
+    } catch(e) { showError(e); }
+    finally { loading(false); }
   }
 
-  async function nhacHocPhiBaoCaoCaNhan(studentId) {
+  async function configureClassZalo(grade, className, currentName='') {
+    const classLabel = `${grade}${className}`;
+    const input = prompt(`Nhập chính xác tên nhóm Zalo của lớp ${classLabel}:`, currentName || '');
+    if (input === null) return;
+    const zaloName = input.trim();
+    if (zaloName.length < 2) return showToast('Tên nhóm Zalo không hợp lệ.', 'error');
+    try {
+      loading(true);
+      await callAPI('saveClassZaloGroup', { grade, className, zalo_name: zaloName }, 'POST');
+      showToast(`Đã lưu nhóm Zalo cho lớp ${classLabel}.`);
+      await loadStats();
+    } catch(e) { showError(e); }
+    finally { loading(false); }
+  }
+
+    async function nhacHocPhiBaoCaoCaNhan(studentId) {
     const month = Number(document.getElementById('tk-thang').value);
     const year = Number(document.getElementById('tk-nam').value);
     if (!confirm(`Gửi nhắc học phí tháng ${month}/${year} cho học sinh này?`)) return;
@@ -787,7 +804,7 @@
       loading(true);
       const response = await callAPI('sendBulkClassLessonReports', { month, year, grade, className }, 'POST');
       const result = response.data || {};
-      showToast(`Đã xếp hàng ${result.queued || 0}/${result.total || 0} lớp${result.duplicate ? `; ${result.duplicate} lớp đã có tin chờ` : ''}${result.skipped_no_zalo ? `; ${result.skipped_no_zalo} lớp chưa cấu hình Zalo` : ''}.`);
+      showToast(`Đã xếp hàng ${result.queued || 0}/${result.total || 0} lớp${result.duplicate ? `; ${result.duplicate} lớp đã có tin chờ` : ''}${result.skipped_no_zalo ? `; ${result.skipped_no_zalo} lớp chưa có nhóm Zalo (hãy bấm Thêm nhóm Zalo)` : ''}.`);
     } catch (e) { showError(e); } finally { loading(false); }
   }
 
