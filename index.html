@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.7</title>
+  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.8</title>
   
   <!-- Font Be Vietnam Pro & Bootstrap Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -632,11 +632,11 @@
 
     <!-- PANEL CÀI ĐẶT -->
     <div id="st" class="panel">
-      <h3 class="section-title"><i class="bi bi-sliders"></i> Cài đặt Hệ thống V4.7</h3>
+      <h3 class="section-title"><i class="bi bi-sliders"></i> Cài đặt Hệ thống V4.8</h3>
       <div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:20px;border-radius:var(--radius-md);margin-bottom:20px;">
-        <h4 style="color:var(--primary-dark);margin-bottom:8px;"><i class="bi bi-database-check"></i> CẬP NHẬT CẤU TRÚC DỮ LIỆU V4.7</h4>
-        <p style="color:var(--text-muted);margin-bottom:12px;">Bổ sung/migrate cấu trúc V4.7, đặc biệt Thời khóa biểu nhiều buổi cho từng lớp; mỗi buổi có Thứ + Giờ bắt đầu và cố định 90 phút/buổi. Chỉ chạy một lần sau khi thay Code.gs.</p>
-        <button class="btn btn-primary" onclick="runSetupV4()"><i class="bi bi-tools"></i> Chạy setup V4.7</button>
+        <h4 style="color:var(--primary-dark);margin-bottom:8px;"><i class="bi bi-database-check"></i> CẬP NHẬT CẤU TRÚC & BẢO MẬT V4.8</h4>
+        <p style="color:var(--text-muted);margin-bottom:12px;">Chạy một lần để tạo SecurityLogs, khóa API Zalo, khóa đánh thức hàng đợi, session quản trị V4.8 và giữ nguyên toàn bộ dữ liệu/thời khóa biểu hiện có.</p>
+        <button class="btn btn-primary" onclick="runSetupV4()"><i class="bi bi-tools"></i> Chạy setup V4.8</button>
       </div>
 
 
@@ -650,6 +650,23 @@
       <div class="sub-card">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h4 style="color:#B45309;margin:0"><i class="bi bi-person-plus-fill"></i> Phụ huynh đăng ký mới</h4><button class="btn btn-primary" onclick="loadRegistrationsAdmin()">Tải danh sách</button></div>
         <div class="table-responsive" style="margin-top:12px"><table><thead><tr><th>Thời gian</th><th>Học sinh</th><th>Khối</th><th>SĐT</th><th>Nguyện vọng</th><th>Trạng thái</th><th>Duyệt</th></tr></thead><tbody id="list-registrations"><tr><td colspan="7" style="text-align:center">Chưa tải.</td></tr></tbody></table></div>
+      </div>
+
+      <div class="sub-card" style="border:1px solid #BFDBFE;background:#F8FBFF">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <h4 style="color:#1D4ED8;margin:0"><i class="bi bi-shield-lock-fill"></i> Bảo mật V4.8</h4>
+          <button class="btn" style="background:#E0F2FE;color:#075985;height:38px" onclick="loadSecurityAdmin()"><i class="bi bi-arrow-clockwise"></i> Kiểm tra</button>
+        </div>
+        <div id="security-status-box" class="mini-note" style="margin-top:10px;padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">Đang chờ kiểm tra trạng thái bảo mật.</div>
+        <div style="margin-top:16px;font-weight:700">Đổi mật khẩu quản trị</div>
+        <div class="schedule-editor-grid" style="margin-top:8px">
+          <input id="sec-current-pass" type="password" autocomplete="current-password" placeholder="Mật khẩu hiện tại">
+          <input id="sec-new-pass" type="password" autocomplete="new-password" placeholder="Mật khẩu mới (>=10 ký tự)">
+          <input id="sec-new-pass2" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu mới">
+        </div>
+        <div class="mini-note" style="margin-top:6px">Mật khẩu mới cần có chữ hoa, chữ thường, số và ký tự đặc biệt. Sau khi đổi, mọi phiên đăng nhập cũ sẽ bị vô hiệu.</div>
+        <div class="report-actions"><button class="btn btn-primary" onclick="changeAdminPasswordUI()"><i class="bi bi-key-fill"></i> Đổi mật khẩu</button><button class="btn" style="background:#F1F5F9" onclick="loadSecurityLogsAdmin()"><i class="bi bi-journal-text"></i> Tải nhật ký bảo mật</button></div>
+        <div class="table-responsive" style="margin-top:10px"><table><thead><tr><th>Thời gian</th><th>Sự kiện</th><th>Kết quả</th><th>Đối tượng</th><th>Chi tiết</th></tr></thead><tbody id="security-log-list"><tr><td colspan="5" style="text-align:center">Chưa tải.</td></tr></tbody></table></div>
       </div>
 
       <div class="danger-zone" style="background:#FEF2F2;border:1px solid #FCA5A5;padding:20px;border-radius:var(--radius-md);margin-top:20px;">
@@ -704,7 +721,7 @@
   // ============================================
   // CẤU HÌNH API - LIÊN KẾT VỚI GOOGLE SHEET
   // ============================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbyxLHQ7Ex5_GNlazHEuUIc2vCNGtffIJ9pm037G0nyEl2Lt4oIgITLxpHKc3uioqdcNJQ/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzvuNbXAPui3tSx1ybF8M25kHhQn7mbe-ZzW6SK9W_H6RN3rFF7j186O8ilW6ai3J-QpA/exec";
   const CENTER_INFO = {
     address: '30/11D Phước Tường, Phước Long, Nam Nha Trang',
     phone: '0972466347',
@@ -727,15 +744,23 @@
   const CLIENT_GET_CACHE = new Map();
   const TAB_LOADED = { hs:true, tk:false, ds:false, tl:false, st:false };
   const PUBLIC_GET_ACTIONS = new Set(['validateAdminSession','getPublicSchedule','getPublicRegistrationInfo','findParentStudentCandidates']);
-  const PUBLIC_POST_ACTIONS = new Set(['adminLogin','verifyParentStudent','submitRegistration','processZaloQueue','wakeupZaloQueue']);
+  const PUBLIC_POST_ACTIONS = new Set(['adminLogin','verifyParentStudent','submitRegistration']);
 
   function getAdminToken(){ try{return sessionStorage.getItem('ap_admin_token')||'';}catch(e){return'';} }
   function isAdminAuthenticated(){ try{return sessionStorage.getItem('ap_admin_auth')==='1' && !!getAdminToken();}catch(e){return false;} }
+  function getSecurityClientId(){
+    try{
+      let id=localStorage.getItem('ap48_client_id');
+      if(!id){id=(window.crypto?.randomUUID?.()||('c_'+Date.now()+'_'+Math.random().toString(36).slice(2)));localStorage.setItem('ap48_client_id',id);}
+      return id;
+    }catch(e){return 'browser_'+Math.random().toString(36).slice(2);}
+  }
   function clearClientApiCache(){ CLIENT_GET_CACHE.clear(); }
   function apiCacheKey(action,params){ return action+'|'+new URLSearchParams(params||{}).toString(); }
 
   async function callAPI(action, params = {}, method = 'GET') {
     let url=API_URL; const options={method,redirect:'follow'}; const payload={...(params||{})};
+    payload._client_id=getSecurityClientId();
     const isPublic=(method==='GET'&&PUBLIC_GET_ACTIONS.has(action))||(method==='POST'&&PUBLIC_POST_ACTIONS.has(action));
     if(!isPublic){ const token=getAdminToken(); if(token) payload._auth_token=token; }
     else if(action==='validateAdminSession'){ const token=getAdminToken(); if(token) payload._auth_token=token; }
@@ -750,9 +775,9 @@
     const text=await response.text();let result;try{result=JSON.parse(text);}catch(e){throw new Error('API không trả JSON. HTTP '+response.status+': '+text.slice(0,100));}
     if(!response.ok)throw new Error(result.message||'HTTP '+response.status);
     if(result.success===false){ if(/Phiên đăng nhập/i.test(result.message||'')) logoutAdmin(false); throw new Error(result.message||'Thao tác thất bại'); }
-    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.7] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
+    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.8] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
     if(method==='GET')CLIENT_GET_CACHE.set(cacheKey,{value:result,expires:Date.now()+12000});
-    else{clearClientApiCache();TAB_LOADED.tk=false;try{sessionStorage.removeItem('anphuc_v45_initial');}catch(e){}const qActions=new Set(['saveAttendance','sendTuitionMessage','sendBulkTuitionReminders','sendClassLessonReport','sendBulkClassLessonReports','sendStudentSituationReport','sendBulkStudentSituationReports','sendMultiMonthTuitionReminder','sendBulkMultiMonthTuitionReminders','saveScores','saveAndSendHomework','processZaloQueue','wakeupZaloQueue','submitRegistration']);if(qActions.has(action)&&isAdminAuthenticated())setTimeout(refreshZaloQueueStatus,250);}
+    else{clearClientApiCache();TAB_LOADED.tk=false;try{sessionStorage.removeItem('anphuc_v48_initial');}catch(e){}const qActions=new Set(['saveAttendance','sendTuitionMessage','sendBulkTuitionReminders','sendClassLessonReport','sendBulkClassLessonReports','sendStudentSituationReport','sendBulkStudentSituationReports','sendMultiMonthTuitionReminder','sendBulkMultiMonthTuitionReminders','saveScores','saveAndSendHomework','processZaloQueue','submitRegistration']);if(qActions.has(action)&&isAdminAuthenticated())setTimeout(refreshZaloQueueStatus,250);}
     return result;
   }
 
@@ -788,10 +813,10 @@
     const nameEl=document.getElementById('admin-display-name');if(nameEl)nameEl.innerText=username||'admin';initAdminControls();
     const today=new Date();
     try{
-      const warm=JSON.parse(sessionStorage.getItem('anphuc_v45_initial')||'null');
+      const warm=JSON.parse(sessionStorage.getItem('anphuc_v48_initial')||'null');
       if(warm&&Date.now()-Number(warm.saved_at||0)<5*60*1000&&warm.data)renderInitialData(warm.data);
     }catch(e){}
-    try{const r=await callAPI('getInitialData',{month:today.getMonth()+1,year:today.getFullYear(),page:1,pageSize:STUDENT_PAGE_SIZE});const d=r.data||{};renderInitialData(d);try{sessionStorage.setItem('anphuc_v45_initial',JSON.stringify({saved_at:Date.now(),data:d}));}catch(e){}}catch(e){console.error(e);showError(e);}
+    try{const r=await callAPI('getInitialData',{month:today.getMonth()+1,year:today.getFullYear(),page:1,pageSize:STUDENT_PAGE_SIZE});const d=r.data||{};renderInitialData(d);try{sessionStorage.setItem('anphuc_v48_initial',JSON.stringify({saved_at:Date.now(),data:d}));}catch(e){}}catch(e){console.error(e);showError(e);}
     refreshZaloQueueStatus();
   }
 
@@ -806,7 +831,7 @@
   function openLoginModal(){document.getElementById('modal-login').style.display='flex';setTimeout(()=>document.getElementById('login-pass')?.focus(),50);}
   function closeLoginModal(){document.getElementById('modal-login').style.display='none';}
   async function loginAdmin(){const username=document.getElementById('login-user').value.trim(),password=document.getElementById('login-pass').value;try{loading(true);const r=await callAPI('adminLogin',{username,password},'POST');const x=r.data||{};sessionStorage.setItem('ap_admin_auth','1');sessionStorage.setItem('ap_admin_token',x.token||'');closeLoginModal();document.getElementById('login-pass').value='';await enterAdminMode(x.username||username);showToast('Đăng nhập thành công.');}catch(e){showError(e);}finally{loading(false);}}
-  async function logoutAdmin(callServer=true){const token=getAdminToken();if(callServer&&token)try{await callAPI('adminLogout',{},'POST');}catch(e){}try{sessionStorage.removeItem('ap_admin_auth');sessionStorage.removeItem('ap_admin_token');sessionStorage.removeItem('anphuc_v45_initial');}catch(e){}clearClientApiCache();showPublicMode();}
+  async function logoutAdmin(callServer=true){const token=getAdminToken();if(callServer&&token)try{await callAPI('adminLogout',{},'POST');}catch(e){}try{sessionStorage.removeItem('ap_admin_auth');sessionStorage.removeItem('ap_admin_token');sessionStorage.removeItem('anphuc_v48_initial');}catch(e){}clearClientApiCache();showPublicMode();}
   function previewPublicPortal(){window.open(location.origin+location.pathname,'_blank','noopener');}
 
   function escapeHtml(value) { return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;'); }
@@ -838,7 +863,7 @@
     if (id === 'tk' && !TAB_LOADED.tk) { TAB_LOADED.tk = true; loadStats(); }
     if (id === 'ds' && !TAB_LOADED.ds) { TAB_LOADED.ds = true; }
     if (id === 'tl' && !TAB_LOADED.tl) { TAB_LOADED.tl = true; loadSchedulesAdmin(); }
-    if (id === 'st' && !TAB_LOADED.st) { TAB_LOADED.st = true; loadRegistrationsAdmin(); loadRegistrationSettingsAdmin(); }
+    if (id === 'st' && !TAB_LOADED.st) { TAB_LOADED.st = true; loadRegistrationsAdmin(); loadRegistrationSettingsAdmin(); loadSecurityAdmin(); }
   }
 
   function toggleReportSection(id) { const el=document.getElementById(id); if(el) el.classList.toggle('open'); }
@@ -1263,7 +1288,7 @@
     }catch(e){addChatBubble(e.message||'Không tải được lịch học.');}
   }
 
-  async function sendChatMessage(){const input=document.getElementById('chat-input'),text=input.value.trim();if(!text)return;input.value='';addChatBubble(text,'user');if(CHAT_STATE.mode==='lookup_name'){await handleParentName(text);return;}if(CHAT_STATE.mode==='lookup_phone'){await handleParentPhone(text);return;}if(CHAT_STATE.mode==='schedule'&&/^(6|7|8|9|10|11|12)$/.test(text)){await loadPublicSchedule(text);return;}const norm=normalizeChatText(text);if(/dia chi|o dau|google map|ban do|lien he|hotline|so dien thoai|sdt|zalo/.test(norm)){await showCenterContact();return;}if(/thoi khoa bieu|lich hoc|khoi\s*\d+|lop\s*\d+/.test(norm)){const m=norm.match(/(?:khoi|lop)\s*(6|7|8|9|10|11|12)/);if(m)await loadPublicSchedule(m[1]);else showScheduleChoices();return;}if(/dang ky|xin hoc|tu van|hoc phi/.test(norm)){await showRegistrationGuide();return;}if(/tra cuu|ket qua|diem|con toi/.test(norm)){startParentLookup();return;}addChatBubble('Tôi có thể hỗ trợ: Tra cứu kết quả học tập, Xem thời khóa biểu, Thông tin đăng ký học, hoặc Địa chỉ & Liên hệ Trung tâm. Quý phụ huynh có thể bấm nút gợi ý phía trên.');}
+  async function sendChatMessage(){const input=document.getElementById('chat-input'),text=input.value.trim();if(!text)return;input.value='';addChatBubble(text,'user');if(CHAT_STATE.mode==='lookup_name'){await handleParentName(text);return;}if(CHAT_STATE.mode==='lookup_phone'){await handleParentPhone(text);return;}if(CHAT_STATE.mode==='schedule'&&/^(6|7|8|9|10|11|12)$/.test(text)){await loadPublicSchedule(text);return;}const norm=normalizeChatText(text);if(/dia chi|o dau|google map|ban do|lien he|hotline|so dien thoai|sdt|zalo/.test(norm)){await showCenterContact();return;}if(/thoi khoa bieu|lich hoc|khoi\s*\d+|lop\s*\d+/.test(norm)){const m=norm.match(/(?:khoi|lop)\s*(6|7|8|9|10|11|12)/);if(m)await loadPublicSchedule(m[1]);else showScheduleChoices();return;}if(/dang ky|xin hoc|tu van|hoc phi/.test(norm)){await showRegistrationGuide();return;}if(/tra cuu|ket qua|diem|con toi/.test(norm)){startParentLookup();return;}addChatBubble('Xin lỗi, Trợ lý hiện chỉ hỗ trợ các nội dung của Trung tâm như tra cứu kết quả học tập, thời khóa biểu, đăng ký học và thông tin liên hệ. Với nội dung khác, kính phiền Quý phụ huynh liên hệ Trung tâm qua SĐT/Zalo <b>0972466347</b> để được giải đáp trực tiếp.','bot',true);}
   function formatDateVN(v){if(!v)return'--';const m=String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);return m?`${m[3]}/${m[2]}/${m[1]}`:escapeHtml(v);}
   function safeUrl(v){try{const u=new URL(String(v||''));return['http:','https:'].includes(u.protocol)?u.href:'#';}catch(e){return'#';}}
 
@@ -1542,11 +1567,32 @@
   }
 
   async function saveFeeSetting() { try { await callAPI('saveSettings', { tuition_amount_default: document.getElementById('hp-def').value }, 'POST'); showToast('Đã lưu mức học phí.'); } catch (error) { showError(error); } }
+  async function loadSecurityAdmin(){
+    try{
+      const r=await callAPI('getSecurityStatus');const x=r.data||{};const box=document.getElementById('security-status-box');
+      if(box)box.innerHTML=`<b>Phiên bản:</b> ${escapeHtml(x.version||'V4.8')} &nbsp;|&nbsp; <b>Phiên đăng nhập:</b> ${Number(x.session_hours||6)} giờ<br>`+
+        `<b>Mật khẩu mặc định:</b> ${x.default_password_in_use?'<span style="color:var(--danger);font-weight:700">ĐANG DÙNG - nên đổi ngay</span>':'<span style="color:var(--success);font-weight:700">Đã đổi</span>'}<br>`+
+        `<b>API key Zalo:</b> ${x.gateway_api_key_configured?'✅':'❌'} &nbsp; <b>Wake key:</b> ${x.wake_key_configured?'✅':'❌'} &nbsp; <b>Gateway URL:</b> ${x.gateway_url_configured?'✅':'⚠️ chưa cấu hình'}`;
+    }catch(e){console.warn(e);}
+  }
+  async function loadSecurityLogsAdmin(){
+    try{loading(true);const r=await callAPI('getSecurityLogs',{limit:50});const rows=Array.isArray(r.data)?r.data:[],tb=document.getElementById('security-log-list');if(!tb)return;
+      tb.innerHTML=rows.length?rows.map(x=>`<tr><td data-label="Thời gian">${escapeHtml(x.timestamp||'')}</td><td data-label="Sự kiện"><b>${escapeHtml(x.event||'')}</b></td><td data-label="Kết quả">${escapeHtml(x.outcome||'')}</td><td data-label="Đối tượng">${escapeHtml(x.subject||'')}</td><td data-label="Chi tiết">${escapeHtml(x.detail||'')}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center">Chưa có sự kiện bảo mật.</td></tr>';
+    }catch(e){showError(e);}finally{loading(false);}
+  }
+  async function changeAdminPasswordUI(){
+    const current=document.getElementById('sec-current-pass').value,newPass=document.getElementById('sec-new-pass').value,newPass2=document.getElementById('sec-new-pass2').value;
+    if(!current||!newPass)return showToast('Hãy nhập mật khẩu hiện tại và mật khẩu mới.','error');
+    if(newPass!==newPass2)return showToast('Hai lần nhập mật khẩu mới chưa khớp.','error');
+    if(!confirm('Đổi mật khẩu quản trị? Sau khi đổi, mọi phiên đăng nhập hiện tại sẽ bị đăng xuất.'))return;
+    try{loading(true);await callAPI('changeAdminPassword',{current_password:current,new_password:newPass},'POST');showToast('Đã đổi mật khẩu. Vui lòng đăng nhập lại.');document.getElementById('sec-current-pass').value='';document.getElementById('sec-new-pass').value='';document.getElementById('sec-new-pass2').value='';logoutAdmin(false);setTimeout(openLoginModal,200);}catch(e){showError(e);}finally{loading(false);}
+  }
+
   async function runSetupV4() {
-    if (!confirm('Chạy setup V4.7 để nâng cấp Thời khóa biểu nhiều buổi và giữ nguyên dữ liệu hiện có?')) return;
+    if (!confirm('Chạy setup V4.8 Security để bổ sung lớp bảo mật và giữ nguyên dữ liệu hiện có?')) return;
     try {
       loading(true);
-      const r = await callAPI('setupSystemV47', {}, 'POST');
+      const r = await callAPI('setupSystemV48', {}, 'POST');
       const x = r.data || {};
       showToast(`${x.message || 'Setup hoàn tất.'}${x.duplicate_queue_rows_marked ? ` Đã khóa ${x.duplicate_queue_rows_marked} dòng tin trùng.` : ''}${x.duplicate_zalo_triggers_removed ? ` Đã xóa ${x.duplicate_zalo_triggers_removed} trigger Zalo trùng.` : ''}`);
     } catch(e) { showError(e); } finally { loading(false); }
