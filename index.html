@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.10</title>
+  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.11</title>
   
   <!-- Font Be Vietnam Pro & Bootstrap Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -722,11 +722,11 @@
 
     <!-- PANEL CÀI ĐẶT -->
     <div id="st" class="panel">
-      <h3 class="section-title"><i class="bi bi-sliders"></i> Cài đặt Hệ thống V4.8</h3>
+      <h3 class="section-title"><i class="bi bi-sliders"></i> Cài đặt Hệ thống V4.11</h3>
       <div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:20px;border-radius:var(--radius-md);margin-bottom:20px;">
-        <h4 style="color:var(--primary-dark);margin-bottom:8px;"><i class="bi bi-database-check"></i> CẬP NHẬT CẤU TRÚC & BẢO MẬT V4.8</h4>
-        <p style="color:var(--text-muted);margin-bottom:12px;">Chạy một lần để tạo SecurityLogs, khóa API Zalo, khóa đánh thức hàng đợi, session quản trị V4.8 và giữ nguyên toàn bộ dữ liệu/thời khóa biểu hiện có.</p>
-        <button class="btn btn-primary" onclick="runSetupV4()"><i class="bi bi-tools"></i> Chạy setup V4.8</button>
+        <h4 style="color:var(--primary-dark);margin-bottom:8px;"><i class="bi bi-database-check"></i> CẬP NHẬT CẤU TRÚC & BẢO MẬT V4.11</h4>
+        <p style="color:var(--text-muted);margin-bottom:12px;">Chạy một lần để giữ toàn bộ bảo mật V4.8 và bổ sung nhập dữ liệu Kiểm tra trực tiếp từ Excel, liên kết bài kiểm tra và thông báo đăng ký về Zalo Trung tâm.</p>
+        <button class="btn btn-primary" onclick="runSetupV4()"><i class="bi bi-tools"></i> Chạy setup V4.11</button>
       </div>
 
 
@@ -735,6 +735,21 @@
         <textarea id="registration-guide-text" style="width:100%;min-height:120px;padding:12px;border:1px solid var(--border);border-radius:10px;font-family:inherit" placeholder="Quy trình xếp lớp, học phí tham khảo, địa chỉ, hotline..."></textarea>
         <div class="schedule-editor-grid" style="margin-top:10px"><input id="registration-notify-group" type="text" placeholder="Tên nhóm Zalo nhận đăng ký mới (ưu tiên)"><input id="registration-notify-phone" type="text" placeholder="Hoặc SĐT Zalo nhận đăng ký mới"></div>
         <div class="report-actions"><button class="btn btn-success" onclick="saveRegistrationSettingsAdmin()"><i class="bi bi-check2-circle"></i> Lưu thông tin tuyển sinh</button><button class="btn" style="background:#E0F2FE;color:#075985" onclick="previewPublicPortal()"><i class="bi bi-eye"></i> Xem Chatbot phụ huynh</button></div>
+      </div>
+
+      <div class="sub-card" style="border:1px solid #C4B5FD;background:#FAF8FF">
+        <h4 style="margin-bottom:8px;color:#6D28D9"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Dữ liệu Kiểm tra trực tuyến từ Excel</h4>
+        <div class="mini-note">Chọn file Excel có 3 sheet <b>ExamRegular</b>, <b>ExamPeriodic</b>, <b>ExamHistory</b> (hoặc tên cũ RegularData / PeriodicData / HistoryLog). Dữ liệu được đọc trên trình duyệt rồi ghi batch vào Google Sheet, không làm chậm lúc mở web.</div>
+        <input id="exam-import-file" type="file" accept=".xlsx,.xls" style="display:none" onchange="importExamExcel(this.files[0]);this.value=''">
+        <div class="schedule-editor-grid" style="margin-top:12px">
+          <input id="exam-base-url" type="url" placeholder="Link trang kiểm tra gốc, ví dụ https://...">
+          <div id="exam-import-status" class="mini-note" style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:9px">Chưa nhập dữ liệu Excel.</div>
+        </div>
+        <div class="report-actions">
+          <button class="btn btn-primary" onclick="document.getElementById('exam-import-file').click()"><i class="bi bi-upload"></i> Nhập Excel vào Google Sheet</button>
+          <button class="btn btn-success" onclick="saveExamSettingsAdmin()"><i class="bi bi-link-45deg"></i> Lưu link trang kiểm tra</button>
+        </div>
+        <div class="mini-note"><b>Cột code</b> có thể là mã đề (VD: D6C1B1) hoặc một URL https:// đầy đủ. Nếu là URL, học sinh bấm sẽ mở trực tiếp URL đó.</div>
       </div>
 
       <div class="sub-card">
@@ -811,9 +826,9 @@
   // ============================================
   // CẤU HÌNH API - LIÊN KẾT VỚI GOOGLE SHEET
   // ============================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbw2wJhmUYTXDSQvg38KDYF6gjnkExzllidcr3kZ48iRwD1w5lR6lhoPF-WiLMTAMlw9MA/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzg-MfP9UgBnV-HaGMnFiGL5NO0xEIqiLtl7tA7nnasBcyPg3t3QfWC_UynOYstPCViFg/exec";
   const CENTER_INFO = {
-    address: '30/11D Phước Tường, Phước Long, Nam Nha Trang',
+    address: '30/11A Phước Tường, Phước Long, Nam Nha Trang',
     phone: '0972466347',
     zalo: '0972466347',
     maps_url: 'https://www.google.com/maps/search/?api=1&query=30%2F11D%20Ph%C6%B0%E1%BB%9Bc%20T%C6%B0%E1%BB%9Dng%2C%20Ph%C6%B0%E1%BB%9Bc%20Long%2C%20Nam%20Nha%20Trang'
@@ -867,7 +882,7 @@
     const text=await response.text();let result;try{result=JSON.parse(text);}catch(e){throw new Error('API không trả JSON. HTTP '+response.status+': '+text.slice(0,100));}
     if(!response.ok)throw new Error(result.message||'HTTP '+response.status);
     if(result.success===false){ if(/Phiên đăng nhập/i.test(result.message||'')) logoutAdmin(false); throw new Error(result.message||'Thao tác thất bại'); }
-    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.10] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
+    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.11] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
     if(method==='GET')CLIENT_GET_CACHE.set(cacheKey,{value:result,expires:Date.now()+12000});
     else{clearClientApiCache();TAB_LOADED.tk=false;try{sessionStorage.removeItem('anphuc_v48_initial');}catch(e){}const qActions=new Set(['saveAttendance','sendTuitionMessage','sendBulkTuitionReminders','sendClassLessonReport','sendBulkClassLessonReports','sendStudentSituationReport','sendBulkStudentSituationReports','sendMultiMonthTuitionReminder','sendBulkMultiMonthTuitionReminders','saveScores','saveAndSendHomework','processZaloQueue','submitRegistration']);if(qActions.has(action)&&isAdminAuthenticated())setTimeout(refreshZaloQueueStatus,250);}
     return result;
@@ -916,7 +931,7 @@
     if(d.settings&&d.settings.tuition_amount_default)document.getElementById('hp-def').value=d.settings.tuition_amount_default;
     renderStudentPage(d.students_page||{items:d.students||[],total:(d.students||[]).length,page:1,page_size:STUDENT_PAGE_SIZE,total_pages:1});
     const dash=d.dashboard||{};document.getElementById('dash-total-hs').innerText=dash.total_students??0;document.getElementById('dash-paid').innerText=dash.paid_count??0;document.getElementById('dash-unpaid').innerText=dash.unpaid_count??0;
-    if(d.settings){const g=document.getElementById('registration-guide-text'),ng=document.getElementById('registration-notify-group'),np=document.getElementById('registration-notify-phone');if(g)g.value=d.settings.registration_guide_text||'';if(ng)ng.value=d.settings.registration_notify_group||'';if(np)np.value=d.settings.registration_notify_phone||'';}
+    if(d.settings){const g=document.getElementById('registration-guide-text'),ng=document.getElementById('registration-notify-group'),np=document.getElementById('registration-notify-phone'),eu=document.getElementById('exam-base-url');if(g)g.value=d.settings.registration_guide_text||'';if(ng)ng.value=d.settings.registration_notify_group||'';if(np)np.value=d.settings.registration_notify_phone||'';if(eu)eu.value=d.settings.exam_redirect_base_url||'';}
   }
 
   function showPublicMode(){document.getElementById('admin-app').style.display='none';document.getElementById('public-app').style.display='block';}
@@ -1233,6 +1248,44 @@
   async function downloadScoreTemplate(){if(!SCORE_ROWS.length){await loadScores();if(!SCORE_ROWS.length)return;}try{loading(true);const XLSX=await ensureXlsxLib();const rows=SCORE_ROWS.map(s=>({'student_id':s.student_id,'Họ và tên':s.name,'Lớp':s.class_info||`K${s.grade}-${s.class}`,'Điểm số':'','Nhận xét':''}));const ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Diem');const grade=document.getElementById('ds-khoi').value,cls=document.getElementById('ds-lop').value,date=document.getElementById('ds-date').value;XLSX.writeFile(wb,`Mau_nhap_diem_K${grade}_${cls}_${date}.xlsx`);}catch(e){showError(e);}finally{loading(false);}}
   async function uploadScoreExcel(file){if(!file)return;if(!SCORE_ROWS.length)return showToast('Hãy bấm Lấy danh sách trước khi nhập Excel.','error');try{loading(true);const XLSX=await ensureXlsxLib(),buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:'array'}),ws=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(ws,{defval:''});const byId=new Map(SCORE_ROWS.map((s,i)=>[String(s.student_id).trim(),i])),byName=new Map(SCORE_ROWS.map((s,i)=>[String(s.name).trim().toLowerCase(),i]));let filled=0;rows.forEach(r=>{const id=String(r.student_id??r['Mã học sinh']??'').trim(),name=String(r['Họ và tên']??r.name??'').trim().toLowerCase(),idx=byId.has(id)?byId.get(id):byName.get(name);if(idx===undefined)return;const score=r['Điểm số']??r.score??'',comment=r['Nhận xét']??r.comment??'';const si=document.querySelector(`.score-input[data-index="${idx}"]`),ci=document.querySelector(`.score-comment[data-index="${idx}"]`);if(si&&String(score).trim()!==''){si.value=score;if(ci&&!String(comment).trim())ci.value=suggestScoreComment(score);}if(ci&&String(comment).trim())ci.value=String(comment).trim();filled++;});showToast(`Đã nhập dữ liệu Excel cho ${filled} học sinh.`);}catch(e){showError(e);}finally{loading(false);}}
 
+
+  function examSheetToRows_(XLSX, wb, names, kind){
+    const sheetName=names.find(n=>wb.SheetNames.includes(n));
+    if(!sheetName)return [];
+    const raw=XLSX.utils.sheet_to_json(wb.Sheets[sheetName],{defval:''});
+    if(kind==='regular')return raw.map(r=>({
+      grade:r.grade??r['Lớp']??r['Khối']??'', chapter:r.chapter??r['Chương']??'', lesson:r.lesson??r['Bài Học']??r['Bài học']??'', code:r.code??r['LINK']??r['Mã đề / Link']??''
+    })).filter(x=>String(x.grade).trim()&&String(x.lesson).trim());
+    if(kind==='periodic')return raw.map(r=>({
+      grade:r.grade??r['Khối (Grade)']??r['Khối']??'', year:r.year??r['Năm học (Year)']??r['Năm học']??'', category:r.category??r['Kỳ thi (Category)']??r['Kỳ thi']??'', display_name:r.display_name??r.displayName??r['Tên hiển thị (DisplayName)']??r['Tên hiển thị']??'', code:r.code??r['Mã đề / Link (Code)']??r['Mã đề / Link']??''
+    })).filter(x=>String(x.grade).trim()&&String(x.display_name).trim());
+    return raw.map(r=>({timestamp:r.timestamp??r['Thời gian']??'',student_name:r.student_name??r['Học sinh']??'',grade:r.grade??r['Khối']??'',exam_name:r.exam_name??r['Bài kiểm tra']??''})).filter(x=>Object.values(x).some(v=>String(v??'').trim()));
+  }
+
+  async function importExamExcel(file){
+    if(!file)return;
+    if(!isAdminAuthenticated())return showToast('Vui lòng đăng nhập Giáo viên trước.','error');
+    try{
+      loading(true);
+      const XLSX=await ensureXlsxLib(),buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:'array',cellDates:true});
+      const regular=examSheetToRows_(XLSX,wb,['ExamRegular','RegularData'],'regular');
+      const periodic=examSheetToRows_(XLSX,wb,['ExamPeriodic','PeriodicData'],'periodic');
+      const history=examSheetToRows_(XLSX,wb,['ExamHistory','HistoryLog'],'history');
+      if(!regular.length&&!periodic.length)throw new Error('Không tìm thấy dữ liệu ExamRegular/ExamPeriodic trong file Excel.');
+      if(!confirm(`Sẽ GHI ĐÈ dữ liệu kiểm tra hiện tại bằng file này:\n- ExamRegular: ${regular.length} dòng\n- ExamPeriodic: ${periodic.length} dòng\n- ExamHistory: ${history.length} dòng\n\nTiếp tục?`))return;
+      const r=await callAPI('importExamWorkbook',{regular,periodic,history},'POST'),x=r.data||{};
+      const box=document.getElementById('exam-import-status');if(box)box.innerHTML=`<b>Đã nhập thành công</b><br>ExamRegular: ${x.regular||0} dòng · ExamPeriodic: ${x.periodic||0} dòng · ExamHistory: ${x.history||0} dòng`;
+      EXAM_CLIENT_CACHE.clear();
+      showToast(`Đã đưa ${x.regular||0} bài thường xuyên và ${x.periodic||0} mục định kỳ lên Google Sheet.`);
+    }catch(e){showError(e);}finally{loading(false);}
+  }
+
+  async function saveExamSettingsAdmin(){
+    const url=document.getElementById('exam-base-url')?.value.trim()||'';
+    if(url&&!/^https:\/\//i.test(url))return showToast('Link trang kiểm tra phải bắt đầu bằng https://','error');
+    try{loading(true);await callAPI('saveExamSettings',{exam_redirect_base_url:url},'POST');EXAM_CLIENT_CACHE.clear();showToast('Đã lưu link trang kiểm tra.');}catch(e){showError(e);}finally{loading(false);}
+  }
+
   // HỌC LIỆU SỐ / BÀI TẬP
   function clearHomeworkHistory() { const tb=document.getElementById('list-homework'); if(tb) tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text-muted)">Chọn Khối + Lớp để xem bài tập đã giao.</td></tr>'; }
   async function loadHomework() {
@@ -1261,7 +1314,7 @@
 
 
   // V4.6 - QUẢN LÝ LỊCH HỌC & TUYỂN SINH
-  async function loadRegistrationSettingsAdmin(){try{const r=await callAPI('getSettings');const x=r.data||{};document.getElementById('registration-guide-text').value=x.registration_guide_text||'';document.getElementById('registration-notify-group').value=x.registration_notify_group||'';document.getElementById('registration-notify-phone').value=x.registration_notify_phone||'';}catch(e){console.warn(e);}}
+  async function loadRegistrationSettingsAdmin(){try{const r=await callAPI('getSettings');const x=r.data||{};document.getElementById('registration-guide-text').value=x.registration_guide_text||'';document.getElementById('registration-notify-group').value=x.registration_notify_group||'';document.getElementById('registration-notify-phone').value=x.registration_notify_phone||'';const eu=document.getElementById('exam-base-url');if(eu)eu.value=x.exam_redirect_base_url||'';}catch(e){console.warn(e);}}
   async function saveRegistrationSettingsAdmin(){try{loading(true);await callAPI('saveRegistrationSettings',{registration_guide_text:document.getElementById('registration-guide-text').value.trim(),registration_notify_group:document.getElementById('registration-notify-group').value.trim(),registration_notify_phone:document.getElementById('registration-notify-phone').value.trim()},'POST');showToast('Đã lưu thông tin tuyển sinh.');}catch(e){showError(e);}finally{loading(false);}}
   const SCHEDULE_DAYS=['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ nhật'];
   function calcScheduleEndTime(start){
@@ -1395,6 +1448,35 @@
     }catch(e){addChatBubble(e.message||'Không tải được lịch học.');}
   }
 
+
+  async function showRegistrationGuide(){
+    ensureParentService_('registration');resetChatState();
+    try{
+      const r=await callAPI('getPublicRegistrationInfo',{},'GET'),x=r.data||{},guide=x.guide_text||'Quý phụ huynh vui lòng để lại thông tin. Trung tâm sẽ liên hệ tư vấn sớm nhất.';
+      setParentWorkspaceHtml_(`<div class="parent-module-card"><div class="parent-module-title"><div><h3><i class="bi bi-clipboard2-check"></i> Thông tin đăng ký học</h3><p>${escapeHtml(guide).replace(/\\n/g,'<br>')}</p></div></div>
+        <div class="schedule-editor-grid" style="margin-top:12px">
+          <input id="pub-reg-name" type="text" placeholder="Họ tên học sinh (*)">
+          <select id="pub-reg-grade"><option value="">-- Khối muốn đăng ký (*) --</option>${KHOI.map(k=>`<option value="${k}">Khối ${k}</option>`).join('')}</select>
+          <input id="pub-reg-phone" type="tel" placeholder="SĐT phụ huynh / Zalo (*)">
+          <input id="pub-reg-note" type="text" placeholder="Học lực / Nguyện vọng: Cơ bản, Nâng cao...">
+        </div>
+        <div class="report-actions"><button class="btn btn-success" onclick="submitPublicRegistration()"><i class="bi bi-send-check"></i> Gửi đăng ký</button></div>
+        <div class="mini-note">Sau khi gửi, hồ sơ được lưu tại Trung tâm và thông báo được đưa vào hàng đợi Zalo để giáo viên liên hệ.</div>
+      </div>`);
+    }catch(e){setParentWorkspaceHtml_(`<div class="portal-empty-state"><i class="bi bi-exclamation-triangle"></i>${escapeHtml(e.message||'Không tải được thông tin đăng ký.')}</div>`);}
+  }
+
+  async function submitPublicRegistration(){
+    const student_name=document.getElementById('pub-reg-name')?.value.trim()||'',grade=document.getElementById('pub-reg-grade')?.value||'',parent_phone=document.getElementById('pub-reg-phone')?.value.trim()||'',note=document.getElementById('pub-reg-note')?.value.trim()||'';
+    if(!student_name||!grade||!parent_phone)return showToast('Vui lòng nhập Họ tên, Khối và SĐT phụ huynh.','error');
+    try{
+      loading(true);
+      const r=await callAPI('submitRegistration',{student_name,grade,parent_phone,note},'POST'),x=r.data||{};
+      setParentWorkspaceHtml_(`<div class="parent-module-card"><div class="portal-empty-state"><i class="bi bi-check-circle-fill" style="color:var(--success)"></i><b>Đã gửi đăng ký thành công</b><div>Trung tâm đã nhận hồ sơ của <b>${escapeHtml(student_name)}</b> - Khối ${escapeHtml(grade)}.</div><div class="mini-note" style="margin-top:8px">Mã đăng ký: ${escapeHtml(x.reg_id||'--')}. Giáo viên sẽ liên hệ qua Zalo/SĐT ${escapeHtml(parent_phone)} sớm nhất.</div></div></div>`);
+      showToast(x.duplicate?'Đăng ký này vừa được gửi trước đó.':'Đã gửi đăng ký đến Trung tâm.');
+    }catch(e){showError(e);}finally{loading(false);}
+  }
+
   function showExamPortal(resetState=true){
     ensureParentService_('exam');
     if(resetState){resetChatState();EXAM_STATE={grade:'',type:'regular',launchBase:''};}
@@ -1461,16 +1543,17 @@
 
   function examItemHtml_(title,codes){
     const arr=Array.isArray(codes)?codes:[];
-    const chips=arr.length?`<div class="exam-codes">${arr.map(c=>`<button class="exam-code-btn" onclick="launchExamCode('${escapeJsSingle(c)}')">📝 ${escapeHtml(c)}</button>`).join('')}</div>`:'<div class="exam-empty">Chưa có mã đề.</div>';
+    const chips=arr.length?`<div class="exam-codes">${arr.map(c=>{const direct=/^https?:\/\//i.test(String(c||''));return `<button class="exam-code-btn" onclick="launchExamCode('${escapeJsSingle(c)}')">${direct?'🔗 Làm bài':'📝 '+escapeHtml(c)}</button>`;}).join('')}</div>`:'<div class="exam-empty">Chưa có mã đề.</div>';
     return `<div class="exam-item"><div class="exam-item-title">${escapeHtml(title||'Bài kiểm tra')}</div>${chips}</div>`;
   }
 
   function launchExamCode(code){
     code=String(code||'').trim(); if(!code)return;
+    if(/^https?:\/\//i.test(code)){window.open(code,'_blank','noopener');return;}
     try{navigator.clipboard?.writeText(code);}catch(e){}
     const base=String(EXAM_STATE.launchBase||'').trim();
     if(base){const sep=base.includes('?')?'&':'?';window.open(base+sep+'code='+encodeURIComponent(code),'_blank','noopener');}
-    else addChatBubble(`Đã sao chép mã đề <b>${escapeHtml(code)}</b>.`,'bot',true);
+    else addChatBubble(`Đã sao chép mã đề <b>${escapeHtml(code)}</b>. Trung tâm chưa cấu hình link trang kiểm tra.`,'bot',true);
   }
 
   async function sendChatMessage(){const input=document.getElementById('chat-input'),text=input.value.trim();if(!text)return;input.value='';addChatBubble(text,'user');if(CHAT_STATE.mode==='lookup_name'){await handleParentName(text);return;}if(CHAT_STATE.mode==='lookup_phone'){await handleParentPhone(text);return;}if(CHAT_STATE.mode==='schedule'&&/^(6|7|8|9|10|11|12)$/.test(text)){await loadPublicSchedule(text);return;}if(CHAT_STATE.mode==='exam'&&/^(6|7|8|9|10|11|12)$/.test(text)){await loadPublicExams(text,EXAM_STATE.type||'regular',true);return;}if(CHAT_STATE.mode==='exam'&&/dinh ky|cuoi cap|giua ky|cuoi ky/.test(normalizeChatText(text))){await loadPublicExams(EXAM_STATE.grade||'9','periodic',true);return;}if(CHAT_STATE.mode==='exam'&&/thuong xuyen|bai hoc|chuyen de/.test(normalizeChatText(text))){await loadPublicExams(EXAM_STATE.grade||'6','regular',true);return;}const norm=normalizeChatText(text);if(/dia chi|o dau|google map|ban do|lien he|hotline|so dien thoai|sdt|zalo/.test(norm)){await showCenterContact();return;}if(/kiem tra|bai kiem tra|thi thu|luyen de|lam de|de thi/.test(norm)){ensureParentService_('exam');showExamPortal(false);const m=norm.match(/(?:khoi|lop)\s*(6|7|8|9|10|11|12)/);const examType=/dinh ky|cuoi cap|giua ky|cuoi ky|thi thu|tuyen sinh|tot nghiep/.test(norm)?'periodic':'regular';if(m)await loadPublicExams(m[1],examType,true);return;}if(/thoi khoa bieu|lich hoc|khoi\s*\d+|lop\s*\d+/.test(norm)){ensureParentService_('schedule');const m=norm.match(/(?:khoi|lop)\s*(6|7|8|9|10|11|12)/);if(m)await loadPublicSchedule(m[1]);else showScheduleChoices();return;}if(/dang ky|xin hoc|tu van|hoc phi/.test(norm)){ensureParentService_('registration');await showRegistrationGuide();return;}if(/tra cuu|ket qua|diem|con toi/.test(norm)){ensureParentService_('lookup');startParentLookup();return;}addChatBubble('Xin lỗi, Trợ lý hiện chỉ hỗ trợ các nội dung của Trung tâm như tra cứu kết quả học tập, thời khóa biểu, kiểm tra trực tuyến và đăng ký học. Với nội dung khác, kính phiền Quý phụ huynh liên hệ Trung tâm qua SĐT/Zalo <b>0972466347</b> để được giải đáp trực tiếp.','bot',true);}
@@ -1774,10 +1857,10 @@
   }
 
   async function runSetupV4() {
-    if (!confirm('Chạy setup V4.8 Security để bổ sung lớp bảo mật và giữ nguyên dữ liệu hiện có?')) return;
+    if (!confirm('Chạy setup V4.11 Security để bổ sung lớp bảo mật và giữ nguyên dữ liệu hiện có?')) return;
     try {
       loading(true);
-      const r = await callAPI('setupSystemV48', {}, 'POST');
+      const r = await callAPI('setupSystemV411', {}, 'POST');
       const x = r.data || {};
       showToast(`${x.message || 'Setup hoàn tất.'}${x.duplicate_queue_rows_marked ? ` Đã khóa ${x.duplicate_queue_rows_marked} dòng tin trùng.` : ''}${x.duplicate_zalo_triggers_removed ? ` Đã xóa ${x.duplicate_zalo_triggers_removed} trigger Zalo trùng.` : ''}`);
     } catch(e) { showError(e); } finally { loading(false); }
