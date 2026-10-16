@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.8</title>
+  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.10</title>
   
   <!-- Font Be Vietnam Pro & Bootstrap Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -191,6 +191,21 @@
     .quick-tag { border:1px solid var(--border); background:#F8FAFC; border-radius:999px; padding:4px 7px; font-size:11px; cursor:pointer; color:var(--text-muted); }
     .quick-tag:hover { border-color:var(--primary); color:var(--primary); background:#EFF6FF; }
     .sub-card { background:#F8FAFC; border:1px solid var(--border); border-radius:var(--radius-md); padding:18px; margin-top:18px; }
+    .exam-grade-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:8px; margin:10px 0; }
+    .exam-grade-grid button { border:1px solid #BFDBFE; background:#EFF6FF; color:#1D4ED8; border-radius:10px; padding:10px 8px; font-family:inherit; font-weight:700; cursor:pointer; }
+    .exam-grade-grid button:hover { background:#DBEAFE; }
+    .exam-type-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 12px; }
+    .exam-type-tabs button { border:1px solid var(--border); background:#fff; color:var(--text-main); border-radius:999px; padding:8px 12px; font-family:inherit; font-weight:700; cursor:pointer; }
+    .exam-type-tabs button.active { background:#2563EB; color:#fff; border-color:#2563EB; }
+    .exam-block details { border:1px solid var(--border); border-radius:10px; margin:8px 0; background:#fff; overflow:hidden; }
+    .exam-block summary { cursor:pointer; padding:11px 13px; font-weight:750; color:#1D4ED8; background:#F8FAFC; }
+    .exam-item { padding:10px 13px; border-top:1px dashed var(--border); }
+    .exam-item-title { font-weight:650; margin-bottom:7px; }
+    .exam-codes { display:flex; gap:6px; flex-wrap:wrap; }
+    .exam-code-btn { border:1px solid #A7F3D0; background:#ECFDF5; color:#047857; border-radius:999px; padding:7px 10px; font-family:inherit; font-weight:750; cursor:pointer; }
+    .exam-code-btn:hover { background:#D1FAE5; }
+    .exam-empty { color:var(--text-muted); font-size:12px; font-style:italic; }
+
     .parent-shell { display:none; min-height:100vh; background:linear-gradient(180deg,#EFF6FF 0,#F8FAFC 45%,#fff 100%); padding:28px 16px; }
     .parent-card { max-width:960px; margin:0 auto; background:#fff; border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow-md); padding:24px; }
     .parent-result-card { border:1px solid var(--border); border-radius:14px; padding:18px; margin-top:16px; background:#fff; }
@@ -255,6 +270,83 @@
     .schedule-add-session { border:1px dashed #2563EB; background:#EFF6FF; color:#1D4ED8; font-weight:700; }
     @media (max-width: 900px) { .schedule-session-row { grid-template-columns:1fr 1fr; } .schedule-session-label { grid-column:1/-1; text-align:left; } .schedule-session-end { min-height:44px; } }
 
+    /* V4.10 - Cổng phụ huynh dạng tab hiện đại, responsive */
+    .public-wrap { max-width:1180px; }
+    .assistant-card { border-radius:24px; box-shadow:0 18px 45px rgba(15,76,129,.10); }
+    .parent-service-tabs {
+      display:flex; gap:10px; padding:14px 16px; overflow-x:auto; scrollbar-width:thin;
+      background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:8;
+      -webkit-overflow-scrolling:touch;
+    }
+    .parent-service-tabs::-webkit-scrollbar { height:5px; }
+    .parent-service-tabs::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:999px; }
+    .parent-service-tab {
+      flex:0 0 auto; min-height:46px; border:1px solid #BFDBFE; background:#F8FBFF; color:#1D4ED8;
+      border-radius:999px; padding:0 17px; display:inline-flex; align-items:center; justify-content:center;
+      gap:8px; font-family:inherit; font-size:14px; font-weight:750; cursor:pointer;
+      box-shadow:0 1px 2px rgba(15,23,42,.04); transition:.18s ease; white-space:nowrap;
+    }
+    .parent-service-tab:hover { transform:translateY(-1px); border-color:#60A5FA; background:#EFF6FF; }
+    .parent-service-tab.active {
+      color:#fff; border-color:#2563EB; background:linear-gradient(135deg,#2563EB,#4F46E5);
+      box-shadow:0 8px 20px rgba(37,99,235,.20);
+    }
+    .parent-service-tab i { font-size:17px; }
+    .parent-service-content { background:linear-gradient(180deg,#FAFCFF,#FFFFFF); }
+    .parent-module-card {
+      width:100%; background:#fff; border:1px solid #DCE7F5; border-radius:18px; padding:18px;
+      box-shadow:0 8px 22px rgba(15,76,129,.06);
+    }
+    .parent-module-title { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+    .parent-module-title h3 { margin:0; color:#0F4C81; font-size:19px; }
+    .parent-module-title p { margin:5px 0 0; color:var(--text-muted); font-size:12.5px; }
+    .parent-module-badge { padding:7px 10px; border-radius:999px; background:#ECFDF5; color:#047857; font-weight:750; font-size:11.5px; }
+    .portal-grade-row { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 14px; }
+    .portal-grade-btn {
+      min-width:86px; height:42px; border:1px solid #BFDBFE; background:#EFF6FF; color:#1D4ED8;
+      border-radius:12px; padding:0 13px; font-family:inherit; font-weight:750; cursor:pointer; transition:.18s;
+    }
+    .portal-grade-btn:hover { background:#DBEAFE; }
+    .portal-grade-btn.active { color:#fff; background:#2563EB; border-color:#2563EB; box-shadow:0 5px 14px rgba(37,99,235,.18); }
+    .portal-subtabs { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 14px; padding-bottom:12px; border-bottom:1px solid #E2E8F0; }
+    .portal-subtab {
+      border:1px solid #D8E1EC; background:#fff; color:#334155; border-radius:999px; padding:9px 14px;
+      font-family:inherit; font-weight:750; cursor:pointer;
+    }
+    .portal-subtab.active { background:#0F4C81; border-color:#0F4C81; color:#fff; }
+    .portal-empty-state { text-align:center; padding:34px 18px; border:1px dashed #BFDBFE; border-radius:14px; background:#F8FBFF; color:#64748B; }
+    .portal-empty-state i { display:block; font-size:32px; color:#60A5FA; margin-bottom:8px; }
+    .exam-catalog-title { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin:5px 0 10px; }
+    .exam-catalog-title strong { color:#0F4C81; }
+    .exam-block details { border-radius:12px; box-shadow:0 1px 2px rgba(15,23,42,.03); }
+    .exam-block summary { padding:13px 14px; }
+    .chat-body.parent-service-content { min-height:430px; max-height:68vh; padding:16px; }
+    .chat-input-row .parent-input-hint { display:none; }
+    @media (min-width:1000px) {
+      .parent-service-tabs { justify-content:center; overflow-x:visible; }
+      .parent-service-tab { min-width:205px; }
+    }
+    @media (max-width:768px) {
+      .public-wrap { max-width:100%; }
+      .assistant-card { border-radius:18px; }
+      .parent-service-tabs { padding:10px 10px; gap:7px; position:static; }
+      .parent-service-tab { min-height:42px; padding:0 13px; font-size:12.5px; }
+      .parent-service-tab i { font-size:15px; }
+      .chat-body.parent-service-content { min-height:410px; max-height:none; padding:10px; }
+      .parent-module-card { padding:13px; border-radius:14px; }
+      .parent-module-title h3 { font-size:17px; }
+      .portal-grade-row { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+      .portal-grade-btn { min-width:0; width:100%; padding:0 6px; height:40px; }
+      .portal-subtabs { display:grid; grid-template-columns:1fr 1fr; }
+      .portal-subtab { padding:9px 8px; font-size:12px; }
+      .center-contact-strip { font-size:11.5px; }
+      .chat-input-row { position:sticky; bottom:0; z-index:7; }
+    }
+    @media (max-width:430px) {
+      .portal-grade-row { grid-template-columns:repeat(3,1fr); }
+      .parent-service-tab { font-size:12px; }
+    }
+
     .status-new { background:#FEF3C7; color:#92400E; }
     .status-approved { background:#DCFCE7; color:#166534; }
     @media(max-width:768px){ .public-shell{padding:10px 8px 24px}.chat-body{min-height:390px;max-height:62vh}.chat-bubble{max-width:94%}.chat-input-row{padding:10px}.assistant-head{padding:16px}.public-login-btn{height:38px;padding:0 12px} }
@@ -283,25 +375,23 @@
 
     <section class="assistant-card">
       <div class="assistant-head">
-        <h2><i class="bi bi-chat-heart-fill"></i> Trợ Lý Trung Tâm Toán An Phúc</h2>
-        <p>Tra cứu kết quả học tập, xem lịch học và đăng ký lớp mới.</p>
+        <h2><i class="bi bi-grid-1x2-fill"></i> Cổng Phụ huynh An Phúc Education</h2>
+        <p>Chọn nhanh chức năng cần sử dụng. Dữ liệu từng mục chỉ tải khi mở để giữ tốc độ web nhanh.</p>
         <div class="center-contact-strip">
           <span><i class="bi bi-geo-alt-fill"></i> 30/11D Phước Tường, Phước Long, Nam Nha Trang</span>
           <span><i class="bi bi-telephone-fill"></i> Điện thoại/Zalo: <a href="tel:0972466347">0972466347</a></span>
           <a href="https://www.google.com/maps/search/?api=1&amp;query=30%2F11D%20Ph%C6%B0%E1%BB%9Bc%20T%C6%B0%E1%BB%9Dng%2C%20Ph%C6%B0%E1%BB%9Bc%20Long%2C%20Nam%20Nha%20Trang" target="_blank" rel="noopener noreferrer"><i class="bi bi-map-fill"></i> Mở Google Maps</a>
         </div>
       </div>
-      <div id="chat-body" class="chat-body">
-        <div class="chat-row bot"><div class="chat-bubble">Xin chào Quý phụ huynh. Tôi có thể hỗ trợ tra cứu kết quả của con, xem thời khóa biểu, thông tin liên hệ hoặc gửi đăng ký học mới. Khi tra cứu học sinh, Quý phụ huynh có thể nhập một phần họ tên, không phân biệt chữ hoa/thường hay có dấu/không dấu.</div></div>
-      </div>
-      <div id="chat-quick" class="chat-quick">
-        <button onclick="startParentLookup()">🔍 Tra cứu kết quả học tập</button>
-        <button onclick="showScheduleChoices()">📅 Xem Thời khóa biểu</button>
-        <button onclick="showRegistrationGuide()">📝 Thông tin đăng ký học</button>
-        <button onclick="showCenterContact()">📍 Địa chỉ & Liên hệ</button>
-      </div>
+      <nav class="parent-service-tabs" aria-label="Chức năng phụ huynh">
+        <button class="parent-service-tab active" data-parent-service="exam" onclick="selectParentService('exam')"><i class="bi bi-pencil-square"></i> Kiểm tra trực tuyến</button>
+        <button class="parent-service-tab" data-parent-service="lookup" onclick="selectParentService('lookup')"><i class="bi bi-search"></i> Tra cứu kết quả học tập</button>
+        <button class="parent-service-tab" data-parent-service="schedule" onclick="selectParentService('schedule')"><i class="bi bi-calendar3"></i> Xem Thời khóa biểu</button>
+        <button class="parent-service-tab" data-parent-service="registration" onclick="selectParentService('registration')"><i class="bi bi-clipboard2-check"></i> Thông tin đăng ký học</button>
+      </nav>
+      <div id="chat-body" class="chat-body parent-service-content"></div>
       <form class="chat-input-row" onsubmit="event.preventDefault();sendChatMessage();">
-        <input id="chat-input" type="text" autocomplete="off" placeholder="Nhập câu hỏi, ví dụ: lịch học khối 8, đăng ký học...">
+        <input id="chat-input" type="text" autocomplete="off" placeholder="Hỏi nhanh Trung tâm, ví dụ: kiểm tra khối 8, lịch học khối 8...">
         <button class="btn btn-primary" type="submit"><i class="bi bi-send-fill"></i> Gửi</button>
       </form>
     </section>
@@ -721,7 +811,7 @@
   // ============================================
   // CẤU HÌNH API - LIÊN KẾT VỚI GOOGLE SHEET
   // ============================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbzvuNbXAPui3tSx1ybF8M25kHhQn7mbe-ZzW6SK9W_H6RN3rFF7j186O8ilW6ai3J-QpA/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbw2wJhmUYTXDSQvg38KDYF6gjnkExzllidcr3kZ48iRwD1w5lR6lhoPF-WiLMTAMlw9MA/exec";
   const CENTER_INFO = {
     address: '30/11D Phước Tường, Phước Long, Nam Nha Trang',
     phone: '0972466347',
@@ -741,9 +831,11 @@
   let SCORE_ROWS = [];
   let SCHEDULE_ROWS = [];
   let CHAT_STATE = { mode:null, candidate:null };
+  const EXAM_CLIENT_CACHE = new Map();
+  let EXAM_STATE = { grade:'', type:'regular', launchBase:'' };
   const CLIENT_GET_CACHE = new Map();
   const TAB_LOADED = { hs:true, tk:false, ds:false, tl:false, st:false };
-  const PUBLIC_GET_ACTIONS = new Set(['validateAdminSession','getPublicSchedule','getPublicRegistrationInfo','findParentStudentCandidates']);
+  const PUBLIC_GET_ACTIONS = new Set(['validateAdminSession','getPublicSchedule','getPublicRegistrationInfo','getPublicExams','findParentStudentCandidates']);
   const PUBLIC_POST_ACTIONS = new Set(['adminLogin','verifyParentStudent','submitRegistration']);
 
   function getAdminToken(){ try{return sessionStorage.getItem('ap_admin_token')||'';}catch(e){return'';} }
@@ -775,7 +867,7 @@
     const text=await response.text();let result;try{result=JSON.parse(text);}catch(e){throw new Error('API không trả JSON. HTTP '+response.status+': '+text.slice(0,100));}
     if(!response.ok)throw new Error(result.message||'HTTP '+response.status);
     if(result.success===false){ if(/Phiên đăng nhập/i.test(result.message||'')) logoutAdmin(false); throw new Error(result.message||'Thao tác thất bại'); }
-    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.8] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
+    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.10] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
     if(method==='GET')CLIENT_GET_CACHE.set(cacheKey,{value:result,expires:Date.now()+12000});
     else{clearClientApiCache();TAB_LOADED.tk=false;try{sessionStorage.removeItem('anphuc_v48_initial');}catch(e){}const qActions=new Set(['saveAttendance','sendTuitionMessage','sendBulkTuitionReminders','sendClassLessonReport','sendBulkClassLessonReports','sendStudentSituationReport','sendBulkStudentSituationReports','sendMultiMonthTuitionReminder','sendBulkMultiMonthTuitionReminders','saveScores','saveAndSendHomework','processZaloQueue','submitRegistration']);if(qActions.has(action)&&isAdminAuthenticated())setTimeout(refreshZaloQueueStatus,250);}
     return result;
@@ -1253,11 +1345,26 @@
     try { loading(true); const r=await callAPI('wakeupZaloQueue',{rounds:3},'POST'); const x=r.data||{}; showToast(`Đã xử lý ${x.processed||0} tin; còn chờ ${x.queue?.waiting||0}.`); await refreshZaloQueueStatus(); } catch(e){showError(e);} finally{loading(false);}  }
 
   // PUBLIC CHATBOT V4.6
-  function initPublicChat(){ const body=document.getElementById('chat-body'); if(!body)return; }
+  let CURRENT_PARENT_SERVICE='exam';
+  function initPublicChat(){ const body=document.getElementById('chat-body'); if(!body)return; selectParentService('exam',false); }
   function addChatBubble(text,who='bot',html=false){const body=document.getElementById('chat-body'),row=document.createElement('div');row.className='chat-row '+who;const bubble=document.createElement('div');bubble.className='chat-bubble';if(html)bubble.innerHTML=text;else bubble.textContent=text;row.appendChild(bubble);body.appendChild(row);body.scrollTop=body.scrollHeight;return bubble;}
+  function setParentWorkspaceHtml_(html){const body=document.getElementById('chat-body');if(!body)return;body.innerHTML=html;body.scrollTop=0;}
+  function clearParentWorkspace_(){const body=document.getElementById('chat-body');if(body){body.innerHTML='';body.scrollTop=0;}}
+  function activateParentTab_(service){CURRENT_PARENT_SERVICE=service;document.querySelectorAll('.parent-service-tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.parentService===service));}
+  function selectParentService(service,fromUser=true){
+    service=['exam','lookup','schedule','registration'].includes(service)?service:'exam';
+    activateParentTab_(service);clearParentWorkspace_();resetChatState();
+    const input=document.getElementById('chat-input');
+    if(input){input.placeholder=service==='lookup'?'Nhập tên học sinh hoặc hỏi nhanh...':service==='schedule'?'Ví dụ: lịch học khối 8...':service==='registration'?'Hỏi về đăng ký, học phí, xếp lớp...':'Ví dụ: kiểm tra khối 8, thi thử khối 9...';}
+    if(service==='exam')showExamPortal(false);
+    else if(service==='lookup')startParentLookup();
+    else if(service==='schedule')showScheduleChoices();
+    else if(service==='registration')showRegistrationGuide();
+  }
+  function ensureParentService_(service){if(CURRENT_PARENT_SERVICE!==service){activateParentTab_(service);clearParentWorkspace_();resetChatState();}}
   function resetChatState(){CHAT_STATE={mode:null,candidate:null};}
   function normalizeChatText(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').replace(/\s+/g,' ').trim().toLowerCase();}
-  function startParentLookup(){CHAT_STATE={mode:'lookup_name',candidate:null};addChatBubble('Quý phụ huynh nhập tên hoặc một phần họ tên học sinh (ít nhất 2 ký tự). Có thể viết hoa/thường tùy ý và có dấu hoặc không dấu. Ví dụ: “Ngọc Đức”, “ngoc duc” hoặc chỉ “Đức”.');document.getElementById('chat-input')?.focus();}
+  function startParentLookup(){ensureParentService_('lookup');CHAT_STATE={mode:'lookup_name',candidate:null};addChatBubble('Quý phụ huynh nhập tên hoặc một phần họ tên học sinh (ít nhất 2 ký tự). Có thể viết hoa/thường tùy ý và có dấu hoặc không dấu. Ví dụ: “Ngọc Đức”, “ngoc duc” hoặc chỉ “Đức”.');document.getElementById('chat-input')?.focus();}
   function chooseParentCandidate(token,name,classInfo){CHAT_STATE={mode:'lookup_phone',candidate:{lookup_token:token,name,class_info:classInfo}};addChatBubble(`Đã chọn ${name} (${classInfo}). Quý phụ huynh vui lòng nhập Số điện thoại đã đăng ký với Trung tâm để xác nhận.`);document.getElementById('chat-input')?.focus();}
   async function handleParentName(name){try{const r=await callAPI('findParentStudentCandidates',{student_name:name},'GET'),rows=Array.isArray(r.data)?r.data:[];if(!rows.length){addChatBubble('Chưa tìm thấy học sinh phù hợp. Quý phụ huynh có thể thử nhập tên ngắn hơn, ví dụ chỉ tên hoặc tên đệm + tên. Hệ thống không phân biệt chữ hoa/thường và có dấu/không dấu.');return;}if(rows.length===1){const x=rows[0];chooseParentCandidate(x.lookup_token,x.name,x.class_info);return;}const html='<b>Tìm thấy nhiều học sinh phù hợp. Vui lòng chọn đúng tên và lớp:</b><div class="chat-quick" style="padding:10px 0 0">'+rows.map(x=>`<button onclick="chooseParentCandidate('${escapeJsSingle(x.lookup_token)}','${escapeJsSingle(x.name)}','${escapeJsSingle(x.class_info)}')">${escapeHtml(x.name)} - ${escapeHtml(x.class_info)}</button>`).join('')+'</div><div class="mini-note" style="margin-top:8px">Nếu chưa thấy đúng học sinh, hãy nhập thêm một phần họ hoặc tên đệm để thu hẹp kết quả.</div>';addChatBubble(html,'bot',true);CHAT_STATE.mode='choose_candidate';}catch(e){addChatBubble(e.message||'Không thể tìm học sinh lúc này.');}}
   function currentSchoolYearStart(){const n=new Date();return n.getMonth()+1>=9?n.getFullYear():n.getFullYear()-1;}
@@ -1274,7 +1381,7 @@
     addChatBubble(`<div class="chat-card"><h3>${escapeHtml(s.name)} - ${escapeHtml(s.class_info)} | Năm học ${escapeHtml(s.school_year||'')}</h3><b>📅 Lịch học hiện tại</b><div class="chat-grid" style="margin-top:7px">${schedule}</div><div style="margin-top:13px"><b>🗓️ Chuyên cần theo tháng</b>${months}</div><div style="margin-top:13px"><b>📊 Điểm số & nhận xét</b>${scores}</div><div class="chat-grid" style="margin-top:13px"><div class="chat-metric"><b>💳 Đã đóng học phí</b><br>${paid}</div><div class="chat-metric"><b>⏳ Chưa đóng</b><br>${unpaid}<br><b>${Number(t.unpaid_total||0).toLocaleString('vi-VN')} đ</b></div></div></div>`,'bot',true);
   }
 
-  function showScheduleChoices(){resetChatState();CHAT_STATE.mode='schedule';addChatBubble('Quý phụ huynh vui lòng chọn <b>một khối</b>. Hệ thống sẽ hiển thị thời khóa biểu của tất cả các lớp thuộc khối đó:','bot',true);addChatBubble(`<div class="chat-quick" style="padding:0">${KHOI.map(k=>`<button onclick="loadPublicSchedule('${k}')">Khối ${k}</button>`).join('')}</div>`,'bot',true);}
+  function showScheduleChoices(){ensureParentService_('schedule');resetChatState();CHAT_STATE.mode='schedule';addChatBubble('Quý phụ huynh vui lòng chọn <b>một khối</b>. Hệ thống sẽ hiển thị thời khóa biểu của tất cả các lớp thuộc khối đó:','bot',true);addChatBubble(`<div class="chat-quick" style="padding:0">${KHOI.map(k=>`<button onclick="loadPublicSchedule('${k}')">Khối ${k}</button>`).join('')}</div>`,'bot',true);}
   async function loadPublicSchedule(grade=''){
     if(!String(grade||'').trim()){showScheduleChoices();return;}
     try{
@@ -1288,7 +1395,85 @@
     }catch(e){addChatBubble(e.message||'Không tải được lịch học.');}
   }
 
-  async function sendChatMessage(){const input=document.getElementById('chat-input'),text=input.value.trim();if(!text)return;input.value='';addChatBubble(text,'user');if(CHAT_STATE.mode==='lookup_name'){await handleParentName(text);return;}if(CHAT_STATE.mode==='lookup_phone'){await handleParentPhone(text);return;}if(CHAT_STATE.mode==='schedule'&&/^(6|7|8|9|10|11|12)$/.test(text)){await loadPublicSchedule(text);return;}const norm=normalizeChatText(text);if(/dia chi|o dau|google map|ban do|lien he|hotline|so dien thoai|sdt|zalo/.test(norm)){await showCenterContact();return;}if(/thoi khoa bieu|lich hoc|khoi\s*\d+|lop\s*\d+/.test(norm)){const m=norm.match(/(?:khoi|lop)\s*(6|7|8|9|10|11|12)/);if(m)await loadPublicSchedule(m[1]);else showScheduleChoices();return;}if(/dang ky|xin hoc|tu van|hoc phi/.test(norm)){await showRegistrationGuide();return;}if(/tra cuu|ket qua|diem|con toi/.test(norm)){startParentLookup();return;}addChatBubble('Xin lỗi, Trợ lý hiện chỉ hỗ trợ các nội dung của Trung tâm như tra cứu kết quả học tập, thời khóa biểu, đăng ký học và thông tin liên hệ. Với nội dung khác, kính phiền Quý phụ huynh liên hệ Trung tâm qua SĐT/Zalo <b>0972466347</b> để được giải đáp trực tiếp.','bot',true);}
+  function showExamPortal(resetState=true){
+    ensureParentService_('exam');
+    if(resetState){resetChatState();EXAM_STATE={grade:'',type:'regular',launchBase:''};}
+    CHAT_STATE.mode='exam';
+    const grade=String(EXAM_STATE.grade||'');
+    const type=String(EXAM_STATE.type||'regular');
+    const grades=KHOI.map(k=>`<button class="portal-grade-btn ${grade===String(k)?'active':''}" data-exam-grade="${k}" onclick="loadPublicExams('${k}','${escapeJsSingle(type)}')">Khối ${k}</button>`).join('');
+    setParentWorkspaceHtml_(`<div class="parent-module-card exam-portal-shell exam-block">
+      <div class="parent-module-title"><div><h3><i class="bi bi-pencil-square"></i> Kiểm tra trực tuyến</h3><p>Kho bài kiểm tra của Trung tâm: Thường xuyên, Định kỳ và Cuối cấp. Chọn khối để xem nội dung.</p></div><span class="parent-module-badge"><i class="bi bi-lightning-charge-fill"></i> Tải theo nhu cầu</span></div>
+      <div class="portal-grade-row">${grades}</div>
+      <div class="portal-subtabs">
+        <button class="portal-subtab ${type==='regular'?'active':''}" onclick="changeExamType_('regular')">Thường xuyên</button>
+        <button class="portal-subtab ${type==='periodic'?'active':''}" onclick="changeExamType_('periodic')">Định kỳ & Cuối cấp</button>
+      </div>
+      <div id="exam-portal-results"><div class="portal-empty-state"><i class="bi bi-journal-check"></i><b>Chọn khối để xem toàn bộ bài kiểm tra</b><div class="mini-note" style="margin-top:6px">Dữ liệu chưa được tải ở bước này nên trang vẫn mở rất nhanh.</div></div></div>
+    </div>`);
+  }
+  function changeExamType_(type){
+    type=type==='periodic'?'periodic':'regular';EXAM_STATE.type=type;
+    if(EXAM_STATE.grade)loadPublicExams(EXAM_STATE.grade,type);
+    else showExamPortal(false);
+  }
+  function updateExamPortalControls_(){
+    document.querySelectorAll('[data-exam-grade]').forEach(b=>b.classList.toggle('active',b.dataset.examGrade===String(EXAM_STATE.grade||'')));
+    document.querySelectorAll('.portal-subtab').forEach((b,i)=>b.classList.toggle('active',(i===0&&EXAM_STATE.type==='regular')||(i===1&&EXAM_STATE.type==='periodic')));
+  }
+
+  function examCacheKey_(grade,type){return String(grade)+'|'+String(type);}
+  async function loadPublicExams(grade,type='regular',showHeader=false,force=false){
+    grade=String(grade||'').trim(); type=String(type||'regular').toLowerCase();
+    ensureParentService_('exam');
+    if(!KHOI.map(String).includes(grade)) return showExamPortal(false);
+    EXAM_STATE.grade=grade; EXAM_STATE.type=type; CHAT_STATE.mode='exam';
+    updateExamPortalControls_();
+    const key=examCacheKey_(grade,type), now=Date.now(); let data=null;
+    const hit=EXAM_CLIENT_CACHE.get(key);
+    if(!force&&hit&&hit.expires>now) data=hit.data;
+    try{
+      if(!data){
+        const r=await callAPI('getPublicExams',{grade,type},'GET'); data=r.data||{};
+        EXAM_CLIENT_CACHE.set(key,{data,expires:Date.now()+5*60*1000});
+      }
+      EXAM_STATE.launchBase=String(data.launch_base||EXAM_STATE.launchBase||'');
+      renderExamCatalog(data,showHeader);
+    }catch(e){const t=document.getElementById('exam-portal-results');if(t)t.innerHTML=`<div class="portal-empty-state"><i class="bi bi-exclamation-triangle"></i>${escapeHtml(e.message||'Không tải được kho bài kiểm tra lúc này.')}</div>`;else addChatBubble(e.message||'Không tải được kho bài kiểm tra lúc này.');}
+  }
+
+  function renderExamCatalog(data,showHeader=false){
+    const grade=String(data.grade||EXAM_STATE.grade||''),type=String(data.type||EXAM_STATE.type||'regular'),rows=Array.isArray(data.rows)?data.rows:[];
+    EXAM_STATE.grade=grade;EXAM_STATE.type=type;ensureParentService_('exam');
+    if(!document.getElementById('exam-portal-results'))showExamPortal(false);
+    updateExamPortalControls_();
+    let body='';
+    if(type==='regular'){
+      const groups=new Map(); rows.forEach(x=>{const ch=String(x.chapter||'Khác');if(!groups.has(ch))groups.set(ch,[]);groups.get(ch).push(x);});
+      body=groups.size?Array.from(groups.entries()).map(([ch,items])=>`<details><summary>${escapeHtml(ch)}</summary>${items.map(x=>examItemHtml_(x.lesson,x.codes)).join('')}</details>`).join(''):'<div class="portal-empty-state"><i class="bi bi-inbox"></i>Chưa có bài kiểm tra thường xuyên cho khối này.</div>';
+    }else{
+      const groups=new Map(); rows.forEach(x=>{const key=[x.year||'',x.category||'Khác'].filter(Boolean).join(' · ');if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x);});
+      body=groups.size?Array.from(groups.entries()).map(([cat,items])=>`<details><summary>${escapeHtml(cat)}</summary>${items.map(x=>examItemHtml_(x.display_name,x.codes)).join('')}</details>`).join(''):'<div class="portal-empty-state"><i class="bi bi-inbox"></i>Chưa có đề định kỳ / cuối cấp cho khối này.</div>';
+    }
+    const target=document.getElementById('exam-portal-results');
+    if(target)target.innerHTML=`<div class="exam-catalog-title"><strong>Khối ${escapeHtml(grade)} · ${type==='regular'?'Thường xuyên':'Định kỳ & Cuối cấp'}</strong><span class="mini-note">${rows.length} mục</span></div>${body}`;
+  }
+
+  function examItemHtml_(title,codes){
+    const arr=Array.isArray(codes)?codes:[];
+    const chips=arr.length?`<div class="exam-codes">${arr.map(c=>`<button class="exam-code-btn" onclick="launchExamCode('${escapeJsSingle(c)}')">📝 ${escapeHtml(c)}</button>`).join('')}</div>`:'<div class="exam-empty">Chưa có mã đề.</div>';
+    return `<div class="exam-item"><div class="exam-item-title">${escapeHtml(title||'Bài kiểm tra')}</div>${chips}</div>`;
+  }
+
+  function launchExamCode(code){
+    code=String(code||'').trim(); if(!code)return;
+    try{navigator.clipboard?.writeText(code);}catch(e){}
+    const base=String(EXAM_STATE.launchBase||'').trim();
+    if(base){const sep=base.includes('?')?'&':'?';window.open(base+sep+'code='+encodeURIComponent(code),'_blank','noopener');}
+    else addChatBubble(`Đã sao chép mã đề <b>${escapeHtml(code)}</b>.`,'bot',true);
+  }
+
+  async function sendChatMessage(){const input=document.getElementById('chat-input'),text=input.value.trim();if(!text)return;input.value='';addChatBubble(text,'user');if(CHAT_STATE.mode==='lookup_name'){await handleParentName(text);return;}if(CHAT_STATE.mode==='lookup_phone'){await handleParentPhone(text);return;}if(CHAT_STATE.mode==='schedule'&&/^(6|7|8|9|10|11|12)$/.test(text)){await loadPublicSchedule(text);return;}if(CHAT_STATE.mode==='exam'&&/^(6|7|8|9|10|11|12)$/.test(text)){await loadPublicExams(text,EXAM_STATE.type||'regular',true);return;}if(CHAT_STATE.mode==='exam'&&/dinh ky|cuoi cap|giua ky|cuoi ky/.test(normalizeChatText(text))){await loadPublicExams(EXAM_STATE.grade||'9','periodic',true);return;}if(CHAT_STATE.mode==='exam'&&/thuong xuyen|bai hoc|chuyen de/.test(normalizeChatText(text))){await loadPublicExams(EXAM_STATE.grade||'6','regular',true);return;}const norm=normalizeChatText(text);if(/dia chi|o dau|google map|ban do|lien he|hotline|so dien thoai|sdt|zalo/.test(norm)){await showCenterContact();return;}if(/kiem tra|bai kiem tra|thi thu|luyen de|lam de|de thi/.test(norm)){ensureParentService_('exam');showExamPortal(false);const m=norm.match(/(?:khoi|lop)\s*(6|7|8|9|10|11|12)/);const examType=/dinh ky|cuoi cap|giua ky|cuoi ky|thi thu|tuyen sinh|tot nghiep/.test(norm)?'periodic':'regular';if(m)await loadPublicExams(m[1],examType,true);return;}if(/thoi khoa bieu|lich hoc|khoi\s*\d+|lop\s*\d+/.test(norm)){ensureParentService_('schedule');const m=norm.match(/(?:khoi|lop)\s*(6|7|8|9|10|11|12)/);if(m)await loadPublicSchedule(m[1]);else showScheduleChoices();return;}if(/dang ky|xin hoc|tu van|hoc phi/.test(norm)){ensureParentService_('registration');await showRegistrationGuide();return;}if(/tra cuu|ket qua|diem|con toi/.test(norm)){ensureParentService_('lookup');startParentLookup();return;}addChatBubble('Xin lỗi, Trợ lý hiện chỉ hỗ trợ các nội dung của Trung tâm như tra cứu kết quả học tập, thời khóa biểu, kiểm tra trực tuyến và đăng ký học. Với nội dung khác, kính phiền Quý phụ huynh liên hệ Trung tâm qua SĐT/Zalo <b>0972466347</b> để được giải đáp trực tiếp.','bot',true);}
   function formatDateVN(v){if(!v)return'--';const m=String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);return m?`${m[3]}/${m[2]}/${m[1]}`:escapeHtml(v);}
   function safeUrl(v){try{const u=new URL(String(v||''));return['http:','https:'].includes(u.protocol)?u.href:'#';}catch(e){return'#';}}
 
