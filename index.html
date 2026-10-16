@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.3</title>
+  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.4</title>
   
   <!-- Font Be Vietnam Pro & Bootstrap Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -200,6 +200,40 @@
     .parent-list li { margin:5px 0; }
     .parent-link { color:var(--primary); font-weight:600; text-decoration:none; }
     .parent-link:hover { text-decoration:underline; }
+
+    /* V4.4 - PUBLIC CHATBOT + ADMIN AUTH */
+    .public-shell { min-height:100vh; background:linear-gradient(180deg,#EAF3FF 0,#F8FAFC 48%,#FFFFFF 100%); padding:20px 14px 36px; }
+    .public-wrap { max-width:980px; margin:0 auto; }
+    .public-header { margin-bottom:18px; }
+    .public-login-btn { border:1px solid rgba(255,255,255,.35); background:#fff; color:#1D4ED8; height:42px; padding:0 16px; border-radius:999px; font-family:inherit; font-weight:700; cursor:pointer; }
+    .assistant-card { background:#fff; border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow-md); overflow:hidden; }
+    .assistant-head { padding:20px 22px; background:linear-gradient(135deg,#EFF6FF,#F0FDFA); border-bottom:1px solid var(--border); }
+    .assistant-head h2 { margin:0; color:#0F4C81; font-size:21px; }
+    .assistant-head p { margin:5px 0 0; color:var(--text-muted); font-size:13px; }
+    .chat-body { min-height:420px; max-height:66vh; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:10px; background:#FAFCFF; }
+    .chat-row { display:flex; width:100%; }
+    .chat-row.user { justify-content:flex-end; }
+    .chat-bubble { max-width:min(780px,88%); padding:11px 14px; border-radius:15px; line-height:1.55; box-shadow:var(--shadow-sm); white-space:normal; }
+    .chat-row.bot .chat-bubble { background:#fff; border:1px solid var(--border); border-top-left-radius:5px; }
+    .chat-row.user .chat-bubble { background:#2563EB; color:#fff; border-top-right-radius:5px; }
+    .chat-quick { display:flex; flex-wrap:wrap; gap:8px; padding:0 18px 14px; background:#FAFCFF; }
+    .chat-quick button { border:1px solid #BFDBFE; background:#EFF6FF; color:#1D4ED8; border-radius:999px; padding:9px 13px; font-family:inherit; font-weight:650; cursor:pointer; }
+    .chat-quick button:hover { background:#DBEAFE; }
+    .chat-input-row { display:flex; gap:9px; padding:14px 18px 18px; border-top:1px solid var(--border); background:#fff; }
+    .chat-input-row input { flex:1; min-width:0; }
+    .chat-card { background:#fff; border:1px solid var(--border); border-radius:13px; padding:14px; margin-top:8px; }
+    .chat-card h3 { margin:0 0 9px; color:#1D4ED8; font-size:16px; }
+    .chat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:9px; }
+    .chat-metric { background:#F8FAFC; border:1px solid var(--border); border-radius:9px; padding:10px; font-size:13px; }
+    .inline-form { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:9px; margin-top:10px; }
+    .inline-form .full { grid-column:1/-1; }
+    .auth-note { font-size:12px; color:var(--text-muted); margin-top:7px; }
+    .admin-mini-actions { display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
+    .btn-ghost-light { height:34px; padding:0 10px; border-radius:999px; border:1px solid rgba(255,255,255,.35); color:#fff; background:rgba(255,255,255,.12); font-family:inherit; font-weight:650; cursor:pointer; }
+    .schedule-editor-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; }
+    .status-new { background:#FEF3C7; color:#92400E; }
+    .status-approved { background:#DCFCE7; color:#166534; }
+    @media(max-width:768px){ .public-shell{padding:10px 8px 24px}.chat-body{min-height:390px;max-height:62vh}.chat-bubble{max-width:94%}.chat-input-row{padding:10px}.assistant-head{padding:16px}.public-login-btn{height:38px;padding:0 12px} }
   </style>
 </head>
 <body>
@@ -208,26 +242,43 @@
 <div id="toast"></div>
 
 
-<div id="parent-portal" class="parent-shell">
-  <div class="parent-card">
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
-      <div class="logo-box" style="width:58px;height:58px;"><img src="https://drive.google.com/thumbnail?id=1FNKbFgs2_2WOkb7hItnGW-uldrRQEFxM&sz=w200" alt="Logo"></div>
-      <div>
-        <h1 style="font-size:22px;color:#0F4C81;margin:0;">CỔNG TRA CỨU PHỤ HUYNH</h1>
-        <div style="color:var(--text-muted);margin-top:3px;">AN PHÚC EDUCATION</div>
+<div id="public-app" class="public-shell">
+  <div class="public-wrap">
+    <header class="app-header public-header">
+      <div class="header-left">
+        <div class="logo-box"><img src="https://drive.google.com/thumbnail?id=1FNKbFgs2_2WOkb7hItnGW-uldrRQEFxM&sz=w200" alt="Logo"></div>
+        <div>
+          <h1 class="brand-title">TRUNG TÂM TOÁN AN PHÚC EDUCATION</h1>
+          <p class="brand-slogan">"Vững kiến thức - Chắc tương lai"</p>
+        </div>
       </div>
-    </div>
-    <div class="toolbar" style="margin-bottom:12px;">
-      <input id="pp-query" type="text" placeholder="Số điện thoại phụ huynh hoặc Mã học sinh" style="flex:2;min-width:240px" onkeydown="if(event.key==='Enter'){event.preventDefault();lookupParentPortal();}">
-      <select id="pp-year" style="min-width:170px"></select>
-      <button class="btn btn-primary" onclick="lookupParentPortal()"><i class="bi bi-search"></i> Tra cứu kết quả học tập</button>
-    </div>
-    <div class="mini-note">Thông tin chỉ hiển thị khi nhập đúng SĐT phụ huynh đã đăng ký hoặc đúng Mã học sinh.</div>
-    <div id="pp-results" style="margin-top:18px;"></div>
+      <div class="header-right" style="background:transparent;border:0;padding:0;">
+        <button class="public-login-btn" onclick="openLoginModal()"><i class="bi bi-person-lock"></i> Đăng nhập Giáo viên</button>
+      </div>
+    </header>
+
+    <section class="assistant-card">
+      <div class="assistant-head">
+        <h2><i class="bi bi-chat-heart-fill"></i> Trợ Lý Trung Tâm Toán An Phúc</h2>
+        <p>Tra cứu kết quả học tập, xem lịch học và đăng ký lớp mới.</p>
+      </div>
+      <div id="chat-body" class="chat-body">
+        <div class="chat-row bot"><div class="chat-bubble">Xin chào Quý phụ huynh. Tôi có thể hỗ trợ tra cứu kết quả của con, xem thời khóa biểu hoặc gửi thông tin đăng ký học mới.</div></div>
+      </div>
+      <div id="chat-quick" class="chat-quick">
+        <button onclick="startParentLookup()">🔍 Tra cứu kết quả học tập</button>
+        <button onclick="showScheduleChoices()">📅 Xem Thời khóa biểu</button>
+        <button onclick="showRegistrationGuide()">📝 Thông tin đăng ký học</button>
+      </div>
+      <form class="chat-input-row" onsubmit="event.preventDefault();sendChatMessage();">
+        <input id="chat-input" type="text" autocomplete="off" placeholder="Nhập câu hỏi, ví dụ: lịch học khối 8, đăng ký học...">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-send-fill"></i> Gửi</button>
+      </form>
+    </section>
   </div>
 </div>
 
-<div class="container" id="admin-app">
+<div class="container" id="admin-app" style="display:none">
   <!-- HEADER -->
   <header class="app-header">
     <div class="header-left">
@@ -245,9 +296,10 @@
         <button class="queue-btn" onclick="flushZaloQueue()">Đẩy tin đang chờ</button>
       </div>
       <div class="avatar">Đ</div>
-      <div class="user-info">
-        <span class="user-name">Lê Hoàng Ngọc Đức</span>
-        <span class="user-role">Quản trị viên</span>
+      <div class="user-info"><span class="user-name" id="admin-display-name">admin</span><span class="user-role">Quản trị viên</span></div>
+      <div class="admin-mini-actions">
+        <button class="btn-ghost-light" onclick="previewPublicPortal()"><i class="bi bi-eye"></i> Xem giao diện PH</button>
+        <button class="btn-ghost-light" onclick="logoutAdmin()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</button>
       </div>
     </div>
   </header>
@@ -321,30 +373,33 @@
     </div>
 
 
-    <!-- PANEL ĐIỂM SỐ V4.3 -->
+    <!-- PANEL ĐIỂM SỐ V4.4 -->
     <div id="ds" class="panel">
       <div class="toolbar">
         <input type="date" id="ds-date">
         <select id="ds-khoi" onchange="updateLop('ds-khoi','ds-lop')"><option value="">-- Khối --</option></select>
         <select id="ds-lop"><option value="">-- Lớp --</option></select>
-        <select id="ds-type">
-          <option value="15P">Kiểm tra 15 phút</option>
-          <option value="DINH_KY">Định kỳ cuối tháng</option>
-          <option value="THI_THU_10">Thi thử vào 10</option>
-        </select>
+        <select id="ds-type"><option value="15P">Kiểm tra 15 phút</option><option value="DINH_KY">Định kỳ cuối tháng</option><option value="THI_THU_10">Thi thử vào 10</option></select>
         <input type="text" id="ds-title" placeholder="Tên bài KT (VD: Hình học chương 1)..." style="flex:1;min-width:220px">
         <button class="btn btn-primary" onclick="loadScores()"><i class="bi bi-card-list"></i> Lấy danh sách</button>
       </div>
+      <div class="toolbar" style="background:#F8FAFC;margin-top:-10px;">
+        <button class="btn" style="background:#E0F2FE;color:#075985" onclick="downloadScoreTemplate()"><i class="bi bi-file-earmark-arrow-down"></i> Tải file Excel mẫu</button>
+        <input id="score-file-input" type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="uploadScoreExcel(this.files[0]);this.value=''">
+        <button class="btn" style="background:#EDE9FE;color:#6D28D9" onclick="document.getElementById('score-file-input').click()"><i class="bi bi-file-earmark-arrow-up"></i> Nhập điểm từ Excel</button>
+        <label style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;"><input id="ds-skip-weak" type="checkbox" checked style="width:18px;height:18px"> Không gửi riêng PH khi điểm &lt;</label>
+        <input id="ds-min-score" type="number" min="0" max="10" step="0.25" value="5" style="width:82px" title="Điểm sàn không gửi riêng">
+      </div>
       <div class="table-responsive">
-        <table>
-          <thead><tr><th>STT</th><th>Họ tên</th><th style="text-align:center">Điểm số (0 - 10)</th><th>Nhận xét nhanh / Ghi chú</th></tr></thead>
-          <tbody id="list-ds"><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">Chọn lớp và thông tin bài kiểm tra để nhập điểm.</td></tr></tbody>
-        </table>
+        <table><thead><tr><th>STT</th><th>Họ tên</th><th style="text-align:center">Điểm số (0 - 10)</th><th>Nhận xét nhanh / Ghi chú</th></tr></thead>
+          <tbody id="list-ds"><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">Chọn lớp và thông tin bài kiểm tra để nhập điểm.</td></tr></tbody></table>
       </div>
       <div id="ds-save-wrap" style="display:none;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px;">
-        <button class="btn btn-primary" onclick="saveScores(false)"><i class="bi bi-floppy-fill"></i> Lưu Bảng Điểm</button>
-        <button class="btn btn-success" onclick="saveScores(true)"><i class="bi bi-send-check-fill"></i> Lưu & Gửi Điểm qua Zalo Phụ huynh</button>
+        <button class="btn btn-primary" onclick="saveScoresV44('none')"><i class="bi bi-floppy-fill"></i> Lưu Bảng Điểm</button>
+        <button class="btn btn-warning" onclick="saveScoresV44('group')"><i class="bi bi-people-fill"></i> Lưu & Gửi 1 lần lên Nhóm Zalo Lớp</button>
+        <button class="btn btn-success" onclick="saveScoresV44('parents')"><i class="bi bi-send-check-fill"></i> Lưu & Gửi điểm riêng cho Phụ huynh</button>
       </div>
+      <div class="mini-note" style="margin-top:10px">Excel được đọc ngay trên trình duyệt. Thư viện xử lý XLSX chỉ tải khi thầy bấm Tải/Nhập Excel nên không làm chậm lúc mở web.</div>
     </div>
 
     <!-- PANEL HỌC PHÍ -->
@@ -508,23 +563,61 @@
 
     <!-- PANEL CÀI ĐẶT -->
     <div id="st" class="panel">
-      <h3 class="section-title"><i class="bi bi-sliders"></i> Cài đặt Hệ thống</h3>
+      <h3 class="section-title"><i class="bi bi-sliders"></i> Cài đặt Hệ thống V4.4</h3>
       <div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:20px;border-radius:var(--radius-md);margin-bottom:20px;">
-        <h4 style="color:var(--primary-dark);margin-bottom:8px;"><i class="bi bi-database-check"></i> CẬP NHẬT CẤU TRÚC DỮ LIỆU V4.3</h4>
-        <p style="color:var(--text-muted);margin-bottom:12px;">Chạy một lần sau khi thay Code.gs để tạo Scores, Homework và nâng cấp hàng đợi Zalo WAITING_SERVER.</p>
-        <button class="btn btn-primary" onclick="runSetupV4()"><i class="bi bi-tools"></i> Chạy setup V4.3</button>
+        <h4 style="color:var(--primary-dark);margin-bottom:8px;"><i class="bi bi-database-check"></i> CẬP NHẬT CẤU TRÚC DỮ LIỆU V4.4</h4>
+        <p style="color:var(--text-muted);margin-bottom:12px;">Tạo/migrate Scores, Schedules, Registrations và cấu hình xác thực Admin. Chỉ cần chạy một lần sau khi thay Code.gs.</p>
+        <button class="btn btn-primary" onclick="runSetupV4()"><i class="bi bi-tools"></i> Chạy setup V4.4</button>
       </div>
-      <div style="background:#F0FDFA;border:1px solid #99F6E4;padding:20px;border-radius:var(--radius-md);margin-bottom:20px;">
-        <h4 style="color:#0F766E;margin-bottom:8px;"><i class="bi bi-people"></i> CỔNG PHỤ HUYNH</h4>
-        <p style="color:var(--text-muted);margin-bottom:12px;">Mở giao diện tra cứu siêu nhẹ, không tải dữ liệu quản trị.</p>
-        <button class="btn btn-success" onclick="openParentPortal()"><i class="bi bi-box-arrow-up-right"></i> Mở Cổng Phụ huynh</button>
+
+      <div class="sub-card">
+        <h4 style="margin-bottom:12px;color:#0F4C81"><i class="bi bi-calendar-week"></i> Thời khóa biểu & Tuyển sinh</h4>
+        <input type="hidden" id="sch-id">
+        <div class="schedule-editor-grid">
+          <select id="sch-grade"><option value="">-- Khối --</option></select>
+          <input id="sch-class" type="text" placeholder="Lớp, VD: A (Nâng cao)">
+          <input id="sch-days" type="text" placeholder="Thứ & giờ học">
+          <input id="sch-teacher" type="text" placeholder="Giáo viên">
+          <input id="sch-room" type="text" placeholder="Phòng học">
+          <select id="sch-status"><option>Đang nhận HS</option><option>Đã đủ sĩ số</option><option>Tạm dừng</option></select>
+          <input id="sch-note" type="text" placeholder="Ghi chú" class="full">
+        </div>
+        <div class="report-actions"><button class="btn btn-success" onclick="saveScheduleAdmin()"><i class="bi bi-floppy"></i> Lưu Thời Khóa Biểu</button><button class="btn" style="background:#F1F5F9" onclick="clearScheduleForm()">Nhập dòng mới</button><button class="btn btn-primary" onclick="loadSchedulesAdmin()">Tải lại</button></div>
+        <div class="table-responsive"><table><thead><tr><th>Khối - Lớp</th><th>Thứ & Giờ</th><th>GV / Phòng</th><th>Tình trạng</th><th>Ghi chú</th><th>Thao tác</th></tr></thead><tbody id="list-schedules-admin"><tr><td colspan="6" style="text-align:center">Chưa tải.</td></tr></tbody></table></div>
       </div>
-      <div class="danger-zone" style="background:#FEF2F2; border:1px solid #FCA5A5; padding:20px; border-radius:var(--radius-md);">
-        <h4 style="color:var(--danger); margin-bottom:8px; display:flex; align-items:center; gap:8px;"><i class="bi bi-cone-striped"></i> VÙNG NGUY HIỂM</h4>
-        <p style="color:#7F1D1D; margin-bottom:16px;">Chức năng Lên lớp tự động sẽ chuyển khối học sinh lên 1 bậc.</p>
+
+      <div class="sub-card">
+        <h4 style="margin-bottom:12px;color:#7C3AED"><i class="bi bi-chat-text"></i> Nội dung Bot trả lời khi phụ huynh hỏi đăng ký</h4>
+        <textarea id="registration-guide-text" style="width:100%;min-height:120px;padding:12px;border:1px solid var(--border);border-radius:10px;font-family:inherit" placeholder="Quy trình xếp lớp, học phí tham khảo, địa chỉ, hotline..."></textarea>
+        <div class="schedule-editor-grid" style="margin-top:10px"><input id="registration-notify-group" type="text" placeholder="Tên nhóm Zalo nhận đăng ký mới (ưu tiên)"><input id="registration-notify-phone" type="text" placeholder="Hoặc SĐT Zalo nhận đăng ký mới"></div>
+        <div class="report-actions"><button class="btn btn-success" onclick="saveRegistrationSettingsAdmin()"><i class="bi bi-check2-circle"></i> Lưu thông tin tuyển sinh</button><button class="btn" style="background:#E0F2FE;color:#075985" onclick="previewPublicPortal()"><i class="bi bi-eye"></i> Xem Chatbot phụ huynh</button></div>
+      </div>
+
+      <div class="sub-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h4 style="color:#B45309;margin:0"><i class="bi bi-person-plus-fill"></i> Phụ huynh đăng ký mới</h4><button class="btn btn-primary" onclick="loadRegistrationsAdmin()">Tải danh sách</button></div>
+        <div class="table-responsive" style="margin-top:12px"><table><thead><tr><th>Thời gian</th><th>Học sinh</th><th>Khối</th><th>SĐT</th><th>Nguyện vọng</th><th>Trạng thái</th><th>Duyệt</th></tr></thead><tbody id="list-registrations"><tr><td colspan="7" style="text-align:center">Chưa tải.</td></tr></tbody></table></div>
+      </div>
+
+      <div class="danger-zone" style="background:#FEF2F2;border:1px solid #FCA5A5;padding:20px;border-radius:var(--radius-md);margin-top:20px;">
+        <h4 style="color:var(--danger);margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="bi bi-cone-striped"></i> VÙNG NGUY HIỂM</h4>
+        <p style="color:#7F1D1D;margin-bottom:16px;">Chức năng Lên lớp tự động sẽ chuyển khối học sinh lên 1 bậc.</p>
         <button class="btn btn-danger" onclick="promoteYear()">🚀 THỰC HIỆN LÊN LỚP TỰ ĐỘNG</button>
       </div>
     </div>
+  </div>
+</div>
+
+
+<!-- MODAL ĐĂNG NHẬP GIÁO VIÊN -->
+<div id="modal-login" class="modal">
+  <div class="modal-box" style="max-width:420px">
+    <h3 style="margin-bottom:8px;color:#0F4C81"><i class="bi bi-shield-lock-fill"></i> Đăng nhập Giáo viên</h3>
+    <p class="mini-note" style="margin-bottom:18px">Phiên đăng nhập được xác thực tại Google Apps Script, không chỉ ẩn/hiện giao diện trên trình duyệt.</p>
+    <form onsubmit="event.preventDefault();loginAdmin()">
+      <div class="row"><label>Tài khoản</label><input id="login-user" type="text" value="admin" autocomplete="username" style="width:100%" required></div>
+      <div class="row"><label>Mật khẩu</label><input id="login-pass" type="password" autocomplete="current-password" style="width:100%" required></div>
+      <div style="display:flex;justify-content:flex-end;gap:9px"><button type="button" class="btn" style="background:#F1F5F9" onclick="closeLoginModal()">Hủy</button><button type="submit" class="btn btn-primary">Đăng nhập</button></div>
+    </form>
   </div>
 </div>
 
@@ -557,7 +650,7 @@
   // ============================================
   // CẤU HÌNH API - LIÊN KẾT VỚI GOOGLE SHEET
   // ============================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbwRHdSimRqlPbT8-JW6wXpiQh0kbgpHgLx70_5IQyjEdsYvNCzczbmZeNMilMKxuyZcZg/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxI3DgyaXH2vSBIvCuzbHmwOnlykKCbGvES-BwZTAnjiqTrfdvKe2PzVUIlDg61s2ZziA/exec";
   
   let PAYMENT_STUDENTS = new Map();
   let CURRENT_STUDENTS = [];
@@ -569,111 +662,91 @@
   let TUITION_SEARCH_TIMER = null;
   let TUITION_ROWS = [];
   let SCORE_ROWS = [];
+  let SCHEDULE_ROWS = [];
+  let CHAT_STATE = { mode:null, candidate:null };
   const CLIENT_GET_CACHE = new Map();
-  const TAB_LOADED = { hs:true, tk:false, ds:false, tl:false };
+  const TAB_LOADED = { hs:true, tk:false, ds:false, tl:false, st:false };
+  const PUBLIC_GET_ACTIONS = new Set(['validateAdminSession','getPublicSchedule','getPublicRegistrationInfo','findParentStudentCandidates']);
+  const PUBLIC_POST_ACTIONS = new Set(['adminLogin','verifyParentStudent','submitRegistration','processZaloQueue','wakeupZaloQueue']);
 
-  function clearClientApiCache() { CLIENT_GET_CACHE.clear(); }
-  function apiCacheKey(action, params) { return action + '|' + new URLSearchParams(params || {}).toString(); }
+  function getAdminToken(){ try{return sessionStorage.getItem('ap_admin_token')||'';}catch(e){return'';} }
+  function isAdminAuthenticated(){ try{return sessionStorage.getItem('ap_admin_auth')==='1' && !!getAdminToken();}catch(e){return false;} }
+  function clearClientApiCache(){ CLIENT_GET_CACHE.clear(); }
+  function apiCacheKey(action,params){ return action+'|'+new URLSearchParams(params||{}).toString(); }
 
   async function callAPI(action, params = {}, method = 'GET') {
-    let url = API_URL;
-    const options = { method: method, redirect: 'follow' };
-    const cacheKey = method === 'GET' ? apiCacheKey(action, params) : '';
-    const now = Date.now();
-    if (cacheKey) {
-      const hit = CLIENT_GET_CACHE.get(cacheKey);
-      if (hit && hit.expires > now) return hit.value;
-      if (hit) CLIENT_GET_CACHE.delete(cacheKey);
-    }
+    let url=API_URL; const options={method,redirect:'follow'}; const payload={...(params||{})};
+    const isPublic=(method==='GET'&&PUBLIC_GET_ACTIONS.has(action))||(method==='POST'&&PUBLIC_POST_ACTIONS.has(action));
+    if(!isPublic){ const token=getAdminToken(); if(token) payload._auth_token=token; }
+    else if(action==='validateAdminSession'){ const token=getAdminToken(); if(token) payload._auth_token=token; }
 
-    if (method === 'GET') {
-      url += '?' + new URLSearchParams({ action: action, ...params }).toString();
-    } else {
-      options.headers = { 'Content-Type': 'text/plain;charset=utf-8' };
-      options.body = JSON.stringify({ action: action, ...params });
-    }
+    const cacheKey=method==='GET'?apiCacheKey(action,payload):'',now=Date.now();
+    if(cacheKey){const hit=CLIENT_GET_CACHE.get(cacheKey);if(hit&&hit.expires>now)return hit.value;if(hit)CLIENT_GET_CACHE.delete(cacheKey);}
+    if(method==='GET') url+='?'+new URLSearchParams({action,...payload}).toString();
+    else{options.headers={'Content-Type':'text/plain;charset=utf-8'};options.body=JSON.stringify({action,...payload});}
 
-    const controller = new AbortController();
-    options.signal = controller.signal;
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-    const started = performance.now();
-    let response;
-    try { response = await fetch(url, options); }
-    catch (e) {
-      if (e.name === 'AbortError') throw new Error('Máy chủ phản hồi quá lâu. Vui lòng thử lại.');
-      throw e;
-    } finally { clearTimeout(timeoutId); }
-
-    const text = await response.text();
-    let result;
-    try { result = JSON.parse(text); }
-    catch (error) { throw new Error('API không trả JSON. HTTP ' + response.status + ': ' + text.slice(0, 100)); }
-
-    if (!response.ok) throw new Error(result.message || 'HTTP ' + response.status);
-    if (result.success === false) throw new Error(result.message || 'Thao tác thất bại');
-
-    const totalMs = Math.round(performance.now() - started);
-    if ((result.meta?.server_ms || totalMs) > 800) console.info(`[V4.3] ${action}: server ${result.meta?.server_ms ?? '?'} ms, tổng ${totalMs} ms`);
-    if (method === 'GET') CLIENT_GET_CACHE.set(cacheKey, { value: result, expires: Date.now() + 12000 });
-    else {
-      clearClientApiCache();
-      TAB_LOADED.tk = false;
-      try { sessionStorage.removeItem('anphuc_v43_initial'); } catch(e) {}
-      const qActions = new Set(['saveAttendance','sendTuitionMessage','sendBulkTuitionReminders','sendClassLessonReport','sendBulkClassLessonReports','sendStudentSituationReport','sendBulkStudentSituationReports','sendMultiMonthTuitionReminder','sendBulkMultiMonthTuitionReminders','saveScores','saveAndSendHomework','processZaloQueue','wakeupZaloQueue']);
-      if (qActions.has(action) && !isParentMode()) setTimeout(refreshZaloQueueStatus, 250);
-    }
+    const controller=new AbortController();options.signal=controller.signal;const timeoutId=setTimeout(()=>controller.abort(),30000);const started=performance.now();let response;
+    try{response=await fetch(url,options);}catch(e){if(e.name==='AbortError')throw new Error('Máy chủ phản hồi quá lâu. Vui lòng thử lại.');throw e;}finally{clearTimeout(timeoutId);}
+    const text=await response.text();let result;try{result=JSON.parse(text);}catch(e){throw new Error('API không trả JSON. HTTP '+response.status+': '+text.slice(0,100));}
+    if(!response.ok)throw new Error(result.message||'HTTP '+response.status);
+    if(result.success===false){ if(/Phiên đăng nhập/i.test(result.message||'')) logoutAdmin(false); throw new Error(result.message||'Thao tác thất bại'); }
+    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.4] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
+    if(method==='GET')CLIENT_GET_CACHE.set(cacheKey,{value:result,expires:Date.now()+12000});
+    else{clearClientApiCache();TAB_LOADED.tk=false;try{sessionStorage.removeItem('anphuc_v44_initial');}catch(e){}const qActions=new Set(['saveAttendance','sendTuitionMessage','sendBulkTuitionReminders','sendClassLessonReport','sendBulkClassLessonReports','sendStudentSituationReport','sendBulkStudentSituationReports','sendMultiMonthTuitionReminder','sendBulkMultiMonthTuitionReminders','saveScores','saveAndSendHomework','processZaloQueue','wakeupZaloQueue','submitRegistration']);if(qActions.has(action)&&isAdminAuthenticated())setTimeout(refreshZaloQueueStatus,250);}
     return result;
   }
 
   const KHOI = [6, 7, 8, 9, 10, 11, 12];
   
   window.onload = async function() {
-    if (isParentMode()) {
-      document.getElementById('admin-app').style.display = 'none';
-      document.getElementById('parent-portal').style.display = 'block';
-      initParentPortal();
-      return; // QUAN TRỌNG: parent mode tuyệt đối không gọi getInitialData().
+    initPublicChat();
+    // Mặc định luôn là giao diện công khai. Chỉ khi có session hợp lệ mới mở Admin.
+    if (isAdminAuthenticated()) {
+      try {
+        const check=await callAPI('validateAdminSession',{},'GET');
+        if(check.data?.valid){ await enterAdminMode(check.data.username||'admin'); return; }
+      } catch(e) { console.warn(e); }
+      logoutAdmin(false);
     }
-
-    const today = new Date();
-    const yyyy = today.getFullYear(); const mm = String(today.getMonth()+1).padStart(2,'0'); const dd = String(today.getDate()).padStart(2,'0');
-    document.getElementById('dd-date').value = `${yyyy}-${mm}-${dd}`;
-    document.getElementById('ds-date').value = `${yyyy}-${mm}-${dd}`;
-    document.getElementById('hw-due').value = `${yyyy}-${mm}-${dd}`;
-    ['dd-khoi','ds-khoi','hp-khoi','m-khoi','tk-khoi','tl-khoi','hw-khoi','hs-khoi','sr-khoi'].forEach(id => {
-      const el = document.getElementById(id); if (!el) return; KHOI.forEach(k => el.add(new Option('Khối '+k, k)));
-    });
-    initDateSel('hp-thang','hp-nam'); initDateSel('tk-thang','tk-nam'); initStudentReportMonths();
-
-    try {
-      const warm = JSON.parse(sessionStorage.getItem('anphuc_v43_initial') || 'null');
-      if (warm && Date.now() - Number(warm.saved_at || 0) < 5*60*1000 && warm.data) {
-        const d = warm.data;
-        if(d.settings && d.settings.tuition_amount_default) document.getElementById('hp-def').value = d.settings.tuition_amount_default;
-        renderStudentPage(d.students_page || {items:d.students || [], total:(d.students||[]).length, page:1, page_size:STUDENT_PAGE_SIZE, total_pages:1});
-        const dash=d.dashboard || {};
-        document.getElementById('dash-total-hs').innerText=dash.total_students ?? 0;
-        document.getElementById('dash-paid').innerText=dash.paid_count ?? 0;
-        document.getElementById('dash-unpaid').innerText=dash.unpaid_count ?? 0;
-      }
-    } catch(e) {}
-
-    try {
-      const r = await callAPI('getInitialData', {month: today.getMonth()+1, year: today.getFullYear(), page:1, pageSize:STUDENT_PAGE_SIZE});
-      const d = r.data || {};
-      if(d.settings && d.settings.tuition_amount_default) document.getElementById('hp-def').value = d.settings.tuition_amount_default;
-      renderStudentPage(d.students_page || {items:d.students || [], total:(d.students||[]).length, page:1, page_size:STUDENT_PAGE_SIZE, total_pages:1});
-      const dash = d.dashboard || {};
-      document.getElementById('dash-total-hs').innerText = dash.total_students ?? 0;
-      document.getElementById('dash-paid').innerText = dash.paid_count ?? 0;
-      document.getElementById('dash-unpaid').innerText = dash.unpaid_count ?? 0;
-      try { sessionStorage.setItem('anphuc_v43_initial', JSON.stringify({saved_at:Date.now(), data:d})); } catch(e) {}
-    } catch(e) {
-      console.error(e);
-      await Promise.all([loadHS(), updateDashboardStats()]);
-    }
-    refreshZaloQueueStatus();
+    showPublicMode();
   };
+
+  function initAdminControls(){
+    const today=new Date(),yyyy=today.getFullYear(),mm=String(today.getMonth()+1).padStart(2,'0'),dd=String(today.getDate()).padStart(2,'0');
+    if(document.getElementById('dd-date'))document.getElementById('dd-date').value=`${yyyy}-${mm}-${dd}`;
+    if(document.getElementById('ds-date'))document.getElementById('ds-date').value=`${yyyy}-${mm}-${dd}`;
+    if(document.getElementById('hw-due'))document.getElementById('hw-due').value=`${yyyy}-${mm}-${dd}`;
+    ['dd-khoi','ds-khoi','hp-khoi','m-khoi','tk-khoi','tl-khoi','hw-khoi','hs-khoi','sr-khoi','sch-grade'].forEach(id=>{const el=document.getElementById(id);if(!el||el.options.length>1)return;KHOI.forEach(k=>el.add(new Option('Khối '+k,k)));});
+    if(document.getElementById('hp-thang')?.options.length===0)initDateSel('hp-thang','hp-nam');
+    if(document.getElementById('tk-thang')?.options.length===0)initDateSel('tk-thang','tk-nam');
+    if(document.getElementById('student-report-months')&&!document.querySelector('.sr-month'))initStudentReportMonths();
+  }
+
+  async function enterAdminMode(username){
+    document.getElementById('public-app').style.display='none';document.getElementById('admin-app').style.display='flex';
+    const nameEl=document.getElementById('admin-display-name');if(nameEl)nameEl.innerText=username||'admin';initAdminControls();
+    const today=new Date();
+    try{
+      const warm=JSON.parse(sessionStorage.getItem('anphuc_v44_initial')||'null');
+      if(warm&&Date.now()-Number(warm.saved_at||0)<5*60*1000&&warm.data)renderInitialData(warm.data);
+    }catch(e){}
+    try{const r=await callAPI('getInitialData',{month:today.getMonth()+1,year:today.getFullYear(),page:1,pageSize:STUDENT_PAGE_SIZE});const d=r.data||{};renderInitialData(d);try{sessionStorage.setItem('anphuc_v44_initial',JSON.stringify({saved_at:Date.now(),data:d}));}catch(e){}}catch(e){console.error(e);showError(e);}
+    refreshZaloQueueStatus();
+  }
+
+  function renderInitialData(d){
+    if(d.settings&&d.settings.tuition_amount_default)document.getElementById('hp-def').value=d.settings.tuition_amount_default;
+    renderStudentPage(d.students_page||{items:d.students||[],total:(d.students||[]).length,page:1,page_size:STUDENT_PAGE_SIZE,total_pages:1});
+    const dash=d.dashboard||{};document.getElementById('dash-total-hs').innerText=dash.total_students??0;document.getElementById('dash-paid').innerText=dash.paid_count??0;document.getElementById('dash-unpaid').innerText=dash.unpaid_count??0;
+    if(d.settings){const g=document.getElementById('registration-guide-text'),ng=document.getElementById('registration-notify-group'),np=document.getElementById('registration-notify-phone');if(g)g.value=d.settings.registration_guide_text||'';if(ng)ng.value=d.settings.registration_notify_group||'';if(np)np.value=d.settings.registration_notify_phone||'';}
+  }
+
+  function showPublicMode(){document.getElementById('admin-app').style.display='none';document.getElementById('public-app').style.display='block';}
+  function openLoginModal(){document.getElementById('modal-login').style.display='flex';setTimeout(()=>document.getElementById('login-pass')?.focus(),50);}
+  function closeLoginModal(){document.getElementById('modal-login').style.display='none';}
+  async function loginAdmin(){const username=document.getElementById('login-user').value.trim(),password=document.getElementById('login-pass').value;try{loading(true);const r=await callAPI('adminLogin',{username,password},'POST');const x=r.data||{};sessionStorage.setItem('ap_admin_auth','1');sessionStorage.setItem('ap_admin_token',x.token||'');closeLoginModal();document.getElementById('login-pass').value='';await enterAdminMode(x.username||username);showToast('Đăng nhập thành công.');}catch(e){showError(e);}finally{loading(false);}}
+  async function logoutAdmin(callServer=true){const token=getAdminToken();if(callServer&&token)try{await callAPI('adminLogout',{},'POST');}catch(e){}try{sessionStorage.removeItem('ap_admin_auth');sessionStorage.removeItem('ap_admin_token');sessionStorage.removeItem('anphuc_v44_initial');}catch(e){}clearClientApiCache();showPublicMode();}
+  function previewPublicPortal(){window.open(location.origin+location.pathname,'_blank','noopener');}
 
   function escapeHtml(value) { return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;'); }
   function escapeJsSingle(value) { return String(value ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/[\r\n]+/g, ' '); }
@@ -704,6 +777,7 @@
     if (id === 'tk' && !TAB_LOADED.tk) { TAB_LOADED.tk = true; loadStats(); }
     if (id === 'ds' && !TAB_LOADED.ds) { TAB_LOADED.ds = true; }
     if (id === 'tl' && !TAB_LOADED.tl) { TAB_LOADED.tl = true; }
+    if (id === 'st' && !TAB_LOADED.st) { TAB_LOADED.st = true; loadSchedulesAdmin(); loadRegistrationsAdmin(); loadRegistrationSettingsAdmin(); }
   }
 
   function loading(s) { document.getElementById('loader').style.display=s?'block':'none'; }
@@ -719,7 +793,7 @@
       document.getElementById('dash-unpaid').innerText = r.data.unpaid_count;
     } catch(e) { console.error(e); }
   }
-  // HỌC SINH - V4.3: phân trang + debounce, không kéo toàn bộ danh sách về trình duyệt.
+  // HỌC SINH - V4.4: phân trang + debounce, không kéo toàn bộ danh sách về trình duyệt.
   function renderStudentPage(pageData) {
     const page = pageData || {};
     CURRENT_STUDENTS = Array.isArray(page.items) ? page.items : [];
@@ -955,60 +1029,29 @@
   }
 
 
-  // ĐIỂM SỐ V4.3
-  function suggestScoreComment(score) {
-    const n = Number(score);
-    if (!Number.isFinite(n)) return '';
-    if (n >= 8.5) return 'Nắm chắc kiến thức, phát huy tốt';
-    if (n >= 6.5) return 'Hiểu bài, cần cẩn thận hơn khi trình bày';
-    return 'Cần ôn kỹ lại lý thuyết và làm thêm bài tập';
+  // ĐIỂM SỐ V4.4
+  function suggestScoreComment(score){const n=Number(score);if(!Number.isFinite(n))return'';if(n>=8.5)return'Nắm chắc kiến thức, phát huy tốt';if(n>=6.5)return'Hiểu bài, cần cẩn thận hơn khi trình bày';return'Cần ôn kỹ lại lý thuyết và làm thêm bài tập';}
+  function scoreChanged(index){const score=document.querySelector(`.score-input[data-index="${index}"]`),comment=document.querySelector(`.score-comment[data-index="${index}"]`);if(score&&comment&&!comment.value.trim()&&score.value!=='')comment.value=suggestScoreComment(score.value);}
+  function setQuickComment(index,value){const el=document.querySelector(`.score-comment[data-index="${index}"]`);if(el){el.value=value;el.focus();}}
+  function onScoreKeydown(event,index){if(!['Enter','ArrowDown'].includes(event.key))return;event.preventDefault();const next=document.querySelector(`.score-input[data-index="${index+1}"]`);if(next){next.focus();next.select();}}
+
+  async function loadScores(){
+    const grade=document.getElementById('ds-khoi').value,className=document.getElementById('ds-lop').value,test_date=document.getElementById('ds-date').value,test_type=document.getElementById('ds-type').value,test_title=document.getElementById('ds-title').value.trim();
+    if(!grade||!className||!test_date||!test_type||!test_title)return showToast('Chọn lớp, ngày, loại và nhập tên bài kiểm tra.','error');
+    try{loading(true);const r=await callAPI('getScoresByClass',{grade,className,test_date,test_type,test_title});SCORE_ROWS=Array.isArray(r.data)?r.data:[];renderScoreRows();}catch(e){showError(e);}finally{loading(false);}
+  }
+  function renderScoreRows(){const tb=document.getElementById('list-ds');if(!SCORE_ROWS.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center">Không có học sinh.</td></tr>';document.getElementById('ds-save-wrap').style.display='none';return;}tb.innerHTML=SCORE_ROWS.map((s,i)=>`<tr data-id="${escapeHtml(s.student_id)}"><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:700">${escapeHtml(s.name)}</td><td data-label="Điểm" style="text-align:center"><input class="score-input" data-index="${i}" type="number" step="0.25" min="0" max="10" value="${escapeHtml(s.score??'')}" oninput="scoreChanged(${i})" onkeydown="onScoreKeydown(event,${i})"></td><td data-label="Nhận xét"><input class="score-comment" data-index="${i}" type="text" value="${escapeHtml(s.comment||'')}" placeholder="Nhận xét..."><div class="quick-tags"><button class="quick-tag" type="button" onclick="setQuickComment(${i},'Nắm chắc kiến thức, phát huy tốt')">Tốt</button><button class="quick-tag" type="button" onclick="setQuickComment(${i},'Hiểu bài, cần cẩn thận hơn khi trình bày')">Cẩn thận</button><button class="quick-tag" type="button" onclick="setQuickComment(${i},'Cần ôn kỹ lại lý thuyết và làm thêm bài tập')">Cần ôn thêm</button></div></td></tr>`).join('');document.getElementById('ds-save-wrap').style.display='flex';}
+  function collectScoreRecords(){return SCORE_ROWS.map((s,i)=>({student_id:s.student_id,score:document.querySelector(`.score-input[data-index="${i}"]`)?.value??'',comment:document.querySelector(`.score-comment[data-index="${i}"]`)?.value.trim()??''}));}
+  async function saveScoresV44(sendMode){
+    if(!SCORE_ROWS.length)return showToast('Chưa tải danh sách học sinh.','error');const grade=document.getElementById('ds-khoi').value,className=document.getElementById('ds-lop').value,test_date=document.getElementById('ds-date').value,test_type=document.getElementById('ds-type').value,test_title=document.getElementById('ds-title').value.trim(),skip_weak=document.getElementById('ds-skip-weak').checked,min_score=Number(document.getElementById('ds-min-score').value||5),records=collectScoreRecords();
+    const label=sendMode==='group'?'Lưu bảng điểm và gửi MỘT tin tổng hợp lên nhóm Zalo lớp?':sendMode==='parents'?'Lưu bảng điểm và gửi riêng kết quả tới phụ huynh?':'Lưu bảng điểm?';if(sendMode!=='none'&&!confirm(label))return;
+    try{loading(true);const r=await callAPI('saveScores',{grade,className,test_date,test_type,test_title,send_mode:sendMode,skip_weak,min_score,records},'POST'),x=r.data||{};let msg=`Đã lưu ${x.saved||0} bản ghi.`;if(sendMode!=='none')msg+=` Đã xếp ${x.queued||0} tin Zalo.`;if(x.skipped_weak)msg+=` Bỏ qua ${x.skipped_weak} HS dưới ${x.min_score} điểm.`;if(x.group_missing)msg+=' Lớp chưa cấu hình nhóm Zalo.';if(x.duplicate)msg+=` ${x.duplicate} tin trùng đã bỏ qua.`;showToast(msg,x.group_missing?'error':'success');await loadScores();}catch(e){showError(e);}finally{loading(false);}
   }
 
-  function scoreChanged(index) {
-    const score = document.querySelector(`.score-input[data-index="${index}"]`);
-    const comment = document.querySelector(`.score-comment[data-index="${index}"]`);
-    if (score && comment && !comment.value.trim() && score.value !== '') comment.value = suggestScoreComment(score.value);
-  }
-
-  function setQuickComment(index, value) {
-    const el = document.querySelector(`.score-comment[data-index="${index}"]`); if (el) { el.value = value; el.focus(); }
-  }
-
-  function onScoreKeydown(event, index) {
-    if (!['Enter','ArrowDown'].includes(event.key)) return;
-    event.preventDefault();
-    const next = document.querySelector(`.score-input[data-index="${index+1}"]`); if (next) { next.focus(); next.select(); }
-  }
-
-  async function loadScores() {
-    const grade=document.getElementById('ds-khoi').value, className=document.getElementById('ds-lop').value;
-    const test_date=document.getElementById('ds-date').value, test_type=document.getElementById('ds-type').value, test_title=document.getElementById('ds-title').value.trim();
-    if (!grade || !className || !test_date || !test_type || !test_title) return showToast('Chọn lớp, ngày, loại và nhập tên bài kiểm tra.', 'error');
-    try {
-      loading(true);
-      const r = await callAPI('getScoresByClass', {grade,className,test_date,test_type,test_title});
-      SCORE_ROWS = Array.isArray(r.data) ? r.data : [];
-      const tb=document.getElementById('list-ds');
-      if (!SCORE_ROWS.length) { tb.innerHTML='<tr><td colspan="4" style="text-align:center">Không có học sinh.</td></tr>'; document.getElementById('ds-save-wrap').style.display='none'; return; }
-      tb.innerHTML=SCORE_ROWS.map((s,i)=>`<tr data-id="${escapeHtml(s.student_id)}"><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:700">${escapeHtml(s.name)}</td><td data-label="Điểm" style="text-align:center"><input class="score-input" data-index="${i}" type="number" step="0.25" min="0" max="10" value="${escapeHtml(s.score ?? '')}" oninput="scoreChanged(${i})" onkeydown="onScoreKeydown(event,${i})"></td><td data-label="Nhận xét"><input class="score-comment" data-index="${i}" type="text" value="${escapeHtml(s.comment||'')}" placeholder="Nhận xét..."><div class="quick-tags"><button class="quick-tag" type="button" onclick="setQuickComment(${i},'Nắm chắc kiến thức, phát huy tốt')">Tốt</button><button class="quick-tag" type="button" onclick="setQuickComment(${i},'Hiểu bài, cần cẩn thận hơn khi trình bày')">Cẩn thận</button><button class="quick-tag" type="button" onclick="setQuickComment(${i},'Cần ôn kỹ lại lý thuyết và làm thêm bài tập')">Cần ôn thêm</button></div></td></tr>`).join('');
-      document.getElementById('ds-save-wrap').style.display='flex';
-    } catch(e) { showError(e); } finally { loading(false); }
-  }
-
-  async function saveScores(sendZalo) {
-    if (!SCORE_ROWS.length) return showToast('Chưa tải danh sách học sinh.', 'error');
-    const grade=document.getElementById('ds-khoi').value, className=document.getElementById('ds-lop').value;
-    const test_date=document.getElementById('ds-date').value, test_type=document.getElementById('ds-type').value, test_title=document.getElementById('ds-title').value.trim();
-    const records=SCORE_ROWS.map((s,i)=>({student_id:s.student_id,score:document.querySelector(`.score-input[data-index="${i}"]`)?.value ?? '',comment:document.querySelector(`.score-comment[data-index="${i}"]`)?.value.trim() ?? ''}));
-    if (sendZalo && !confirm('Lưu bảng điểm và xếp tin kết quả vào hàng đợi Zalo phụ huynh?')) return;
-    try {
-      loading(true);
-      const r=await callAPI('saveScores',{grade,className,test_date,test_type,test_title,send_zalo:sendZalo,records},'POST');
-      const x=r.data||{};
-      showToast(sendZalo ? `Đã lưu ${x.saved||0} điểm; xếp ${x.queued||0} tin Zalo${x.duplicate?`; ${x.duplicate} tin trùng đã bỏ qua`:''}.` : `Đã lưu bảng điểm (${x.saved||0} bản ghi${x.deleted?`, xóa ${x.deleted}`:''}).`);
-      await loadScores();
-    } catch(e) { showError(e); } finally { loading(false); }
-  }
+  let XLSX_LIB_PROMISE=null;
+  function ensureXlsxLib(){if(window.XLSX)return Promise.resolve(window.XLSX);if(XLSX_LIB_PROMISE)return XLSX_LIB_PROMISE;XLSX_LIB_PROMISE=new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';sc.onload=()=>resolve(window.XLSX);sc.onerror=()=>reject(new Error('Không tải được thư viện Excel. Kiểm tra Internet.'));document.head.appendChild(sc);});return XLSX_LIB_PROMISE;}
+  async function downloadScoreTemplate(){if(!SCORE_ROWS.length){await loadScores();if(!SCORE_ROWS.length)return;}try{loading(true);const XLSX=await ensureXlsxLib();const rows=SCORE_ROWS.map(s=>({'student_id':s.student_id,'Họ và tên':s.name,'Lớp':s.class_info||`K${s.grade}-${s.class}`,'Điểm số':'','Nhận xét':''}));const ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Diem');const grade=document.getElementById('ds-khoi').value,cls=document.getElementById('ds-lop').value,date=document.getElementById('ds-date').value;XLSX.writeFile(wb,`Mau_nhap_diem_K${grade}_${cls}_${date}.xlsx`);}catch(e){showError(e);}finally{loading(false);}}
+  async function uploadScoreExcel(file){if(!file)return;if(!SCORE_ROWS.length)return showToast('Hãy bấm Lấy danh sách trước khi nhập Excel.','error');try{loading(true);const XLSX=await ensureXlsxLib(),buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:'array'}),ws=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(ws,{defval:''});const byId=new Map(SCORE_ROWS.map((s,i)=>[String(s.student_id).trim(),i])),byName=new Map(SCORE_ROWS.map((s,i)=>[String(s.name).trim().toLowerCase(),i]));let filled=0;rows.forEach(r=>{const id=String(r.student_id??r['Mã học sinh']??'').trim(),name=String(r['Họ và tên']??r.name??'').trim().toLowerCase(),idx=byId.has(id)?byId.get(id):byName.get(name);if(idx===undefined)return;const score=r['Điểm số']??r.score??'',comment=r['Nhận xét']??r.comment??'';const si=document.querySelector(`.score-input[data-index="${idx}"]`),ci=document.querySelector(`.score-comment[data-index="${idx}"]`);if(si&&String(score).trim()!==''){si.value=score;if(ci&&!String(comment).trim())ci.value=suggestScoreComment(score);}if(ci&&String(comment).trim())ci.value=String(comment).trim();filled++;});showToast(`Đã nhập dữ liệu Excel cho ${filled} học sinh.`);}catch(e){showError(e);}finally{loading(false);}}
 
   // HỌC LIỆU SỐ / BÀI TẬP
   function clearHomeworkHistory() { const tb=document.getElementById('list-homework'); if(tb) tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text-muted)">Chọn Khối + Lớp để xem bài tập đã giao.</td></tr>'; }
@@ -1036,41 +1079,43 @@
     }catch(e){showError(e);}finally{loading(false);}
   }
 
+
+  // V4.4 - QUẢN LÝ LỊCH HỌC & TUYỂN SINH
+  async function loadRegistrationSettingsAdmin(){try{const r=await callAPI('getSettings');const x=r.data||{};document.getElementById('registration-guide-text').value=x.registration_guide_text||'';document.getElementById('registration-notify-group').value=x.registration_notify_group||'';document.getElementById('registration-notify-phone').value=x.registration_notify_phone||'';}catch(e){console.warn(e);}}
+  async function saveRegistrationSettingsAdmin(){try{loading(true);await callAPI('saveRegistrationSettings',{registration_guide_text:document.getElementById('registration-guide-text').value.trim(),registration_notify_group:document.getElementById('registration-notify-group').value.trim(),registration_notify_phone:document.getElementById('registration-notify-phone').value.trim()},'POST');showToast('Đã lưu thông tin tuyển sinh.');}catch(e){showError(e);}finally{loading(false);}}
+  function clearScheduleForm(){['sch-id','sch-class','sch-days','sch-teacher','sch-room','sch-note'].forEach(id=>document.getElementById(id).value='');document.getElementById('sch-grade').value='';document.getElementById('sch-status').value='Đang nhận HS';}
+  async function loadSchedulesAdmin(){try{const r=await callAPI('getSchedules');SCHEDULE_ROWS=Array.isArray(r.data)?r.data:[];const tb=document.getElementById('list-schedules-admin');tb.innerHTML=SCHEDULE_ROWS.length?SCHEDULE_ROWS.map((x,i)=>`<tr><td data-label="Lớp"><b>K${escapeHtml(x.grade)}-${escapeHtml(x.class)}</b></td><td data-label="Thứ & Giờ">${escapeHtml(x.days_time||'')}</td><td data-label="GV / Phòng">${escapeHtml(x.teacher||'--')} / ${escapeHtml(x.room||'--')}</td><td data-label="Tình trạng">${escapeHtml(x.status||'')}</td><td data-label="Ghi chú">${escapeHtml(x.note||'')}</td><td data-label="Thao tác"><button class="btn-icon edit" onclick="editScheduleAdmin(${i})"><i class="bi bi-pencil-fill"></i></button><button class="btn-icon delete" onclick="deleteScheduleAdmin('${escapeJsSingle(x.schedule_id)}')"><i class="bi bi-trash-fill"></i></button></td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center">Chưa có lịch học.</td></tr>';}catch(e){showError(e);}}
+  function editScheduleAdmin(i){const x=SCHEDULE_ROWS[i];if(!x)return;document.getElementById('sch-id').value=x.schedule_id||'';document.getElementById('sch-grade').value=x.grade||'';document.getElementById('sch-class').value=x.class||'';document.getElementById('sch-days').value=x.days_time||'';document.getElementById('sch-teacher').value=x.teacher||'';document.getElementById('sch-room').value=x.room||'';document.getElementById('sch-status').value=x.status||'Đang nhận HS';document.getElementById('sch-note').value=x.note||'';document.getElementById('sch-days').focus();}
+  async function saveScheduleAdmin(){const data={schedule_id:document.getElementById('sch-id').value,grade:document.getElementById('sch-grade').value,className:document.getElementById('sch-class').value.trim(),days_time:document.getElementById('sch-days').value.trim(),teacher:document.getElementById('sch-teacher').value.trim(),room:document.getElementById('sch-room').value.trim(),status:document.getElementById('sch-status').value,note:document.getElementById('sch-note').value.trim()};try{loading(true);await callAPI('saveSchedule',data,'POST');showToast('Đã lưu thời khóa biểu.');clearScheduleForm();await loadSchedulesAdmin();}catch(e){showError(e);}finally{loading(false);}}
+  async function deleteScheduleAdmin(id){if(!confirm('Xóa dòng thời khóa biểu này?'))return;try{loading(true);await callAPI('deleteSchedule',{schedule_id:id},'POST');showToast('Đã xóa lịch học.');await loadSchedulesAdmin();}catch(e){showError(e);}finally{loading(false);}}
+  async function loadRegistrationsAdmin(){try{const r=await callAPI('getRegistrations');const rows=Array.isArray(r.data)?r.data:[],tb=document.getElementById('list-registrations');tb.innerHTML=rows.length?rows.map(x=>{const st=String(x.status||'NEW').toUpperCase(),badge=st==='APPROVED'?'badge badge-success':'badge status-new',action=st==='APPROVED'?'<span style="color:var(--success);font-weight:700">Đã duyệt</span>':`<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="reg-class-${escapeHtml(x.reg_id)}" style="height:36px;padding:0 8px">${(Number(x.grade)>=6&&Number(x.grade)<=9?['A','B','C']:['Chung']).map(c=>`<option value="${c}">${c}</option>`).join('')}</select><button class="btn btn-success" style="height:36px;padding:0 10px" onclick="approveRegistrationAdmin('${escapeJsSingle(x.reg_id)}','${escapeJsSingle(x.student_name)}')">Duyệt vào HS</button></div>`;return`<tr><td data-label="Thời gian">${escapeHtml(x.created_at||'')}</td><td data-label="Học sinh"><b>${escapeHtml(x.student_name||'')}</b></td><td data-label="Khối">${escapeHtml(x.grade||'')}</td><td data-label="SĐT">${escapeHtml(x.parent_phone||'')}</td><td data-label="Nguyện vọng">${escapeHtml(x.note||'')}</td><td data-label="Trạng thái"><span class="${badge}">${escapeHtml(st)}</span></td><td data-label="Duyệt">${action}</td></tr>`;}).join(''):'<tr><td colspan="7" style="text-align:center">Chưa có đăng ký.</td></tr>';}catch(e){showError(e);}}
+  async function approveRegistrationAdmin(id,name){const cls=document.getElementById(`reg-class-${id}`)?.value;if(!cls)return showToast('Chọn lớp chính thức.','error');try{loading(true);const r=await callAPI('approveRegistration',{reg_id:id,className:cls},'POST');showToast(`Đã duyệt vào danh sách học sinh. Mã HS: ${r.data?.student_id||''}`);await loadRegistrationsAdmin();loadHS();updateDashboardStats();}catch(e){showError(e);}finally{loading(false);}}
+
   // HÀNG ĐỢI ZALO
   async function refreshZaloQueueStatus() {
-    if (isParentMode()) return;
+    if (!isAdminAuthenticated()) return;
     try { const r=await callAPI('getZaloQueueStatus'); const x=r.data||{}; const el=document.getElementById('zalo-queue-count'); if(el) el.innerText=Number(x.waiting||0); } catch(e) { console.warn('Queue status',e); }
   }
   async function flushZaloQueue() {
     try { loading(true); const r=await callAPI('wakeupZaloQueue',{rounds:3},'POST'); const x=r.data||{}; showToast(`Đã xử lý ${x.processed||0} tin; còn chờ ${x.queue?.waiting||0}.`); await refreshZaloQueueStatus(); } catch(e){showError(e);} finally{loading(false);}  }
 
-  // PARENT PORTAL
-  function isParentMode() { return new URLSearchParams(window.location.search).get('mode') === 'parent'; }
-  function openParentPortal() { const u=new URL(window.location.href); u.searchParams.set('mode','parent'); window.open(u.toString(),'_blank','noopener'); }
-  function initParentPortal() {
-    const sel=document.getElementById('pp-year'); const n=new Date(); const sy=n.getMonth()+1>=9?n.getFullYear():n.getFullYear()-1;
-    [sy-1,sy,sy+1].forEach(y=>sel.add(new Option(`Năm học ${y}-${y+1}`,y))); sel.value=String(sy);
-  }
-  function formatDateVN(v){ if(!v)return'--'; const m=String(v).match(/^(\d{4})-(\d{2})-(\d{2})/); return m?`${m[3]}/${m[2]}/${m[1]}`:escapeHtml(v); }
-  function safeUrl(v){ try{const u=new URL(String(v||'')); return ['http:','https:'].includes(u.protocol)?u.href:'#';}catch(e){return'#';} }
-  async function lookupParentPortal(){
-    const query=document.getElementById('pp-query').value.trim(), school_year_start=document.getElementById('pp-year').value; if(!query)return showToast('Nhập SĐT phụ huynh hoặc Mã học sinh.','error');
-    try{loading(true); const r=await callAPI('lookupParentPortal',{phone:query,school_year_start}); renderParentPortal(r.data||{});}catch(e){showError(e);}finally{loading(false);}
-  }
-  function renderParentPortal(data){
-    const box=document.getElementById('pp-results'), rows=Array.isArray(data.students)?data.students:[];
-    if(!rows.length){box.innerHTML='<div class="parent-result-card" style="text-align:center;color:var(--text-muted)">Không tìm thấy học sinh phù hợp với thông tin đã nhập.</div>';return;}
-    box.innerHTML=`<div style="font-weight:700;color:#0F4C81">Kết quả năm học ${escapeHtml(data.school_year||'')}</div>`+rows.map(s=>{
-      const a=s.attendance||{}, t=s.tuition||{};
-      const paid=(t.paid||[]).map(x=>`${escapeHtml(x.label)}: ${Number(x.amount||0).toLocaleString('vi-VN')}đ (${escapeHtml(x.paid_at||'')})`).join('<br>')||'Chưa ghi nhận';
-      const unpaid=(t.unpaid||[]).map(x=>escapeHtml(x.label)).join(', ')||'Không có';
-      const mats=(s.materials||[]).map(x=>`Đợt ${x.batch}: ${x.received?'✅':'—'}`).join(' &nbsp; ');
-      const scores=(s.scores||[]).length?`<ul class="parent-list">${s.scores.map(x=>`<li><b>${escapeHtml(x.test_type_label)} - ${escapeHtml(x.test_title||'')}</b> (${formatDateVN(x.test_date)}): <b>${escapeHtml(x.score)}/10</b>${x.comment?` — ${escapeHtml(x.comment)}`:''}</li>`).join('')}</ul>`:'Chưa có điểm trong năm học.';
-      const hw=(s.homework||[]).length?`<ul class="parent-list">${s.homework.map(h=>`<li><b>${escapeHtml(h.title)}</b> — giao ${formatDateVN(h.assigned_date)}, hạn ${formatDateVN(h.due_date)} — <a class="parent-link" href="${safeUrl(h.material_url)}" target="_blank" rel="noopener">Mở bài tập</a></li>`).join('')}</ul>`:'Chưa có bài tập số.';
-      const pDates=(a.permitted_dates||[]).map(formatDateVN).join(', ')||'--', kDates=(a.unexcused_dates||[]).map(formatDateVN).join(', ')||'--';
-      return `<div class="parent-result-card"><h2 style="font-size:19px;color:#1D4ED8;margin-bottom:4px">${escapeHtml(s.name)} — ${escapeHtml(s.class_info)}</h2><div class="mini-note">Mã HS: ${escapeHtml(s.student_id)} | Ngày nhập học: ${formatDateVN(s.enrollment_date)}</div><div class="parent-grid"><div class="parent-metric"><b>Chuyên cần</b><br>Tổng buổi: ${a.total_sessions||0}<br>Có mặt: ${a.present||0}<br>P: ${a.permitted_absence||0}<br>K: ${a.unexcused_absence||0}</div><div class="parent-metric"><b>Ngày vắng</b><br>P: ${pDates}<br>K: ${kDates}</div><div class="parent-metric"><b>Học phí đã đóng</b><br>${paid}</div><div class="parent-metric"><b>Tháng chưa đóng</b><br>${unpaid}<br><b>${Number(t.unpaid_total||0).toLocaleString('vi-VN')} đ</b></div></div><div class="sub-card"><b>Tài liệu giấy:</b><div style="margin-top:7px">${mats}</div></div><div class="sub-card"><b>Bảng điểm & nhận xét</b>${scores}</div><div class="sub-card"><b>5 bài tập gần nhất</b>${hw}</div></div>`;
-    }).join('');
-  }
+  // PUBLIC CHATBOT V4.4
+  function initPublicChat(){ const body=document.getElementById('chat-body'); if(!body)return; }
+  function addChatBubble(text,who='bot',html=false){const body=document.getElementById('chat-body'),row=document.createElement('div');row.className='chat-row '+who;const bubble=document.createElement('div');bubble.className='chat-bubble';if(html)bubble.innerHTML=text;else bubble.textContent=text;row.appendChild(bubble);body.appendChild(row);body.scrollTop=body.scrollHeight;return bubble;}
+  function resetChatState(){CHAT_STATE={mode:null,candidate:null};}
+  function startParentLookup(){CHAT_STATE={mode:'lookup_name',candidate:null};addChatBubble('Quý phụ huynh vui lòng nhập đầy đủ Họ và tên học sinh.');document.getElementById('chat-input')?.focus();}
+  function chooseParentCandidate(token,name,classInfo){CHAT_STATE={mode:'lookup_phone',candidate:{lookup_token:token,name,class_info:classInfo}};addChatBubble(`Đã chọn ${name} (${classInfo}). Quý phụ huynh vui lòng nhập Số điện thoại đã đăng ký với Trung tâm để xác nhận.`);document.getElementById('chat-input')?.focus();}
+  async function handleParentName(name){try{const r=await callAPI('findParentStudentCandidates',{student_name:name},'GET'),rows=Array.isArray(r.data)?r.data:[];if(!rows.length){addChatBubble('Chưa tìm thấy học sinh có đúng họ tên này. Quý phụ huynh vui lòng kiểm tra lại họ tên đầy đủ.');return;}if(rows.length===1){const x=rows[0];chooseParentCandidate(x.lookup_token,x.name,x.class_info);return;}const html='<b>Tìm thấy nhiều học sinh cùng tên. Vui lòng chọn đúng lớp:</b><div class="chat-quick" style="padding:10px 0 0">'+rows.map(x=>`<button onclick="chooseParentCandidate('${escapeJsSingle(x.lookup_token)}','${escapeJsSingle(x.name)}','${escapeJsSingle(x.class_info)}')">${escapeHtml(x.name)} - ${escapeHtml(x.class_info)}</button>`).join('')+'</div>';addChatBubble(html,'bot',true);CHAT_STATE.mode='choose_candidate';}catch(e){addChatBubble(e.message||'Không thể tìm học sinh lúc này.');}}
+  function currentSchoolYearStart(){const n=new Date();return n.getMonth()+1>=9?n.getFullYear():n.getFullYear()-1;}
+  async function handleParentPhone(phone){const c=CHAT_STATE.candidate;if(!c)return startParentLookup();try{const r=await callAPI('verifyParentStudent',{lookup_token:c.lookup_token,parent_phone:phone,school_year_start:currentSchoolYearStart()},'POST');renderVerifiedParentCard(r.data||{});resetChatState();}catch(e){addChatBubble(e.message||'Số điện thoại không khớp.');}}
+  function renderVerifiedParentCard(s){const schedule=(s.schedule||[]).length?(s.schedule||[]).map(x=>`<div class="chat-metric"><b>${escapeHtml(x.days_time||'')}</b><br>GV: ${escapeHtml(x.teacher||'--')} | Phòng: ${escapeHtml(x.room||'--')}<br>${escapeHtml(x.status||'')}</div>`).join(''):'<div class="chat-metric">Chưa cập nhật thời khóa biểu.</div>';const months=(s.attendance_months||[]).length?`<div class="table-responsive" style="margin-top:8px"><table><thead><tr><th>Tháng</th><th>Số buổi</th><th>Vắng</th><th>P</th><th>K</th></tr></thead><tbody>${s.attendance_months.map(x=>`<tr><td>${x.month}/${x.year}</td><td>${x.total_sessions}</td><td>${x.absent}</td><td>${x.permitted}</td><td>${x.unexcused}</td></tr>`).join('')}</tbody></table></div>`:'Chưa có dữ liệu chuyên cần.';const scores=(s.scores||[]).length?`<div class="table-responsive"><table><thead><tr><th>Ngày</th><th>Bài kiểm tra</th><th>Điểm</th><th>Nhận xét</th></tr></thead><tbody>${s.scores.map(x=>`<tr><td>${formatDateVN(x.test_date)}</td><td>${escapeHtml(x.test_type_label)} - ${escapeHtml(x.test_title||'')}</td><td><b>${escapeHtml(x.score)}/10</b></td><td>${escapeHtml(x.comment||'--')}</td></tr>`).join('')}</tbody></table></div>`:'Chưa có điểm.';const t=s.tuition||{},paid=(t.paid||[]).map(x=>`${escapeHtml(x.label||'')}: ${Number(x.amount||0).toLocaleString('vi-VN')}đ (${escapeHtml(x.paid_at||'')})`).join('<br>')||'Chưa ghi nhận',unpaid=(t.unpaid||[]).map(x=>escapeHtml(x.label||'')).join(', ')||'Không có';addChatBubble(`<div class="chat-card"><h3>${escapeHtml(s.name)} - ${escapeHtml(s.class_info)} | Năm học ${escapeHtml(s.school_year||'')}</h3><b>📅 Lịch học hiện tại</b><div class="chat-grid" style="margin-top:7px">${schedule}</div><div style="margin-top:13px"><b>🗓️ Chuyên cần theo tháng</b>${months}</div><div style="margin-top:13px"><b>📊 Điểm số & nhận xét</b>${scores}</div><div class="chat-grid" style="margin-top:13px"><div class="chat-metric"><b>💳 Đã đóng học phí</b><br>${paid}</div><div class="chat-metric"><b>⏳ Chưa đóng</b><br>${unpaid}<br><b>${Number(t.unpaid_total||0).toLocaleString('vi-VN')} đ</b></div></div></div>`,'bot',true);}
+  function showScheduleChoices(){resetChatState();CHAT_STATE.mode='schedule';addChatBubble('Quý phụ huynh chọn khối cần xem thời khóa biểu:','bot');addChatBubble(`<div class="chat-quick" style="padding:0">${KHOI.map(k=>`<button onclick="loadPublicSchedule('${k}')">Khối ${k}</button>`).join('')}<button onclick="loadPublicSchedule('')">Tất cả lớp</button></div>`,'bot',true);}
+  async function loadPublicSchedule(grade=''){try{const r=await callAPI('getPublicSchedule',{grade},'GET'),rows=Array.isArray(r.data)?r.data:[];if(!rows.length){addChatBubble('Chưa có thời khóa biểu phù hợp được cập nhật.');return;}const html=`<div class="chat-card"><h3>📅 Thời khóa biểu ${grade?'Khối '+escapeHtml(grade):'các lớp'}</h3><div class="table-responsive"><table><thead><tr><th>Khối - Lớp</th><th>Ca học / Thứ - Giờ</th><th>GV / Phòng</th><th>Tình trạng</th><th>Ghi chú</th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${escapeHtml(x.class_info)}</b></td><td>${escapeHtml(x.days_time||'')}</td><td>${escapeHtml(x.teacher||'--')} / ${escapeHtml(x.room||'--')}</td><td>${escapeHtml(x.status||'')}</td><td>${escapeHtml(x.note||'')}</td></tr>`).join('')}</tbody></table></div></div>`;addChatBubble(html,'bot',true);resetChatState();}catch(e){addChatBubble(e.message||'Không tải được lịch học.');}}
+  async function showRegistrationGuide(){resetChatState();try{const r=await callAPI('getPublicRegistrationInfo',{},'GET'),guide=escapeHtml(r.data?.guide_text||'').replace(/\n/g,'<br>');addChatBubble(`<div class="chat-card"><h3>📝 Thông tin đăng ký học</h3><div>${guide}</div><form class="inline-form" onsubmit="event.preventDefault();submitPublicRegistration(this)"><input name="student_name" placeholder="Họ tên học sinh *" required><select name="grade" required><option value="">-- Khối muốn đăng ký * --</option>${KHOI.map(k=>`<option value="${k}">Khối ${k}</option>`).join('')}</select><input name="parent_phone" placeholder="SĐT phụ huynh (Zalo) *" required><select name="level"><option value="Cơ bản">Cơ bản</option><option value="Nâng cao">Nâng cao</option><option value="Cần tư vấn">Cần tư vấn</option></select><input class="full" name="note" placeholder="Học lực hiện tại / Nguyện vọng thêm"><button class="btn btn-success full" type="submit"><i class="bi bi-send-check"></i> Gửi đăng ký</button></form></div>`,'bot',true);}catch(e){addChatBubble(e.message||'Không tải được thông tin đăng ký.');}}
+  async function submitPublicRegistration(form){const fd=new FormData(form),note=[fd.get('level'),fd.get('note')].filter(Boolean).join(' - ');try{const r=await callAPI('submitRegistration',{student_name:fd.get('student_name'),grade:fd.get('grade'),parent_phone:fd.get('parent_phone'),note},'POST');form.querySelectorAll('input,select,button').forEach(x=>x.disabled=true);addChatBubble(`Cảm ơn Quý phụ huynh. Trung tâm đã nhận đăng ký mã ${r.data?.reg_id||''} và sẽ liên hệ qua Zalo sớm nhất.`);}catch(e){addChatBubble(e.message||'Chưa gửi được đăng ký.');}}
+  async function sendChatMessage(){const input=document.getElementById('chat-input'),text=input.value.trim();if(!text)return;input.value='';addChatBubble(text,'user');if(CHAT_STATE.mode==='lookup_name'){await handleParentName(text);return;}if(CHAT_STATE.mode==='lookup_phone'){await handleParentPhone(text);return;}if(CHAT_STATE.mode==='schedule'&&/^(6|7|8|9|10|11|12)$/.test(text)){await loadPublicSchedule(text);return;}const norm=text.toLowerCase();if(/thời khóa biểu|thoi khoa bieu|lịch học|lich hoc|khối\s*\d+|lớp\s*\d+/.test(norm)){const m=norm.match(/(?:khối|khoi|lớp|lop)\s*(6|7|8|9|10|11|12)/);if(m)await loadPublicSchedule(m[1]);else showScheduleChoices();return;}if(/đăng ký|dang ky|xin học|xin hoc|tư vấn|tu van|học phí|hoc phi/.test(norm)){await showRegistrationGuide();return;}if(/tra cứu|tra cuu|kết quả|ket qua|điểm|diem|con tôi|con toi/.test(norm)){startParentLookup();return;}addChatBubble('Tôi có thể hỗ trợ 3 nội dung chính: Tra cứu kết quả học tập, Xem thời khóa biểu, hoặc Thông tin đăng ký học. Quý phụ huynh có thể bấm nút gợi ý phía trên.');}
+  function formatDateVN(v){if(!v)return'--';const m=String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);return m?`${m[3]}/${m[2]}/${m[1]}`:escapeHtml(v);}
+  function safeUrl(v){try{const u=new URL(String(v||''));return['http:','https:'].includes(u.protocol)?u.href:'#';}catch(e){return'#';}}
 
   // TÀI LIỆU & THỐNG KÊ
   function loadMaterials() { loading(true); callAPI('getMaterialStatus', {grade: document.getElementById('tl-khoi').value, className: document.getElementById('tl-lop').value}).then(r=>{ loading(false); document.getElementById('list-tl').innerHTML=r.data.map((s,i)=>`<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp"><span class="badge badge-success">${s.class_info}</span></td>${[1,2,3,4,5,6].map(j=>`<td data-label="Đợt ${j}" style="text-align:center"><input type="checkbox" class="cb-material" style="width:20px;height:20px" ${s['batch'+j]?'checked':''} onchange="toggleMaterial('${s.student_id}',${j},this.checked)"></td>`).join('')}</tr>`).join(''); }).catch(showError); }
@@ -1347,10 +1392,10 @@
 
   async function saveFeeSetting() { try { await callAPI('saveSettings', { tuition_amount_default: document.getElementById('hp-def').value }, 'POST'); showToast('Đã lưu mức học phí.'); } catch (error) { showError(error); } }
   async function runSetupV4() {
-    if (!confirm('Chạy setup V4.3 để tạo Scores, Homework và nâng cấp hàng đợi Zalo?')) return;
+    if (!confirm('Chạy setup V4.4 để tạo/migrate Scores, Schedules, Registrations và cấu hình đăng nhập?')) return;
     try {
       loading(true);
-      const r = await callAPI('setupSystemV43', {}, 'POST');
+      const r = await callAPI('setupSystemV44', {}, 'POST');
       const x = r.data || {};
       showToast(`${x.message || 'Setup hoàn tất.'}${x.duplicate_queue_rows_marked ? ` Đã khóa ${x.duplicate_queue_rows_marked} dòng tin trùng.` : ''}${x.duplicate_zalo_triggers_removed ? ` Đã xóa ${x.duplicate_zalo_triggers_removed} trigger Zalo trùng.` : ''}`);
     } catch(e) { showError(e); } finally { loading(false); }
