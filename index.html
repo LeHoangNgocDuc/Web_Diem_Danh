@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.5</title>
+  <title>AN PHÚC EDUCATION | Hệ Thống Quản Lý V4.6</title>
   
   <!-- Font Be Vietnam Pro & Bootstrap Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -201,7 +201,7 @@
     .parent-link { color:var(--primary); font-weight:600; text-decoration:none; }
     .parent-link:hover { text-decoration:underline; }
 
-    /* V4.5 - PUBLIC CHATBOT + ADMIN AUTH */
+    /* V4.6 - PUBLIC CHATBOT + ADMIN AUTH */
     .public-shell { min-height:100vh; background:linear-gradient(180deg,#EAF3FF 0,#F8FAFC 48%,#FFFFFF 100%); padding:20px 14px 36px; }
     .public-wrap { max-width:980px; margin:0 auto; }
     .public-header { margin-bottom:18px; }
@@ -237,6 +237,17 @@
     .admin-mini-actions { display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
     .btn-ghost-light { height:34px; padding:0 10px; border-radius:999px; border:1px solid rgba(255,255,255,.35); color:#fff; background:rgba(255,255,255,.12); font-family:inherit; font-weight:650; cursor:pointer; }
     .schedule-editor-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; }
+    .report-collapsible { border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:14px; overflow:hidden; background:#fff; }
+    .report-collapse-head { width:100%; border:0; background:#F8FAFC; padding:15px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; font-family:inherit; color:var(--text-main); text-align:left; }
+    .report-collapse-head:hover { background:#F1F5F9; }
+    .report-collapse-title { display:flex; align-items:center; gap:9px; font-size:17px; font-weight:750; }
+    .report-collapse-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .report-count { min-width:28px; height:28px; padding:0 9px; border-radius:999px; background:#E2E8F0; color:#475569; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:750; }
+    .report-chevron { transition:transform .2s ease; font-size:18px; color:var(--text-muted); }
+    .report-collapsible.open .report-chevron { transform:rotate(180deg); }
+    .report-collapse-body { display:none; padding:0 16px 16px; }
+    .report-collapsible.open .report-collapse-body { display:block; }
+    .schedule-fixed-duration { height:48px; border:1px solid #C7D2FE; background:#EEF2FF; color:#4338CA; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; padding:0 12px; font-weight:700; }
     .status-new { background:#FEF3C7; color:#92400E; }
     .status-approved { background:#DCFCE7; color:#166534; }
     @media(max-width:768px){ .public-shell{padding:10px 8px 24px}.chat-body{min-height:390px;max-height:62vh}.chat-bubble{max-width:94%}.chat-input-row{padding:10px}.assistant-head{padding:16px}.public-login-btn{height:38px;padding:0 12px} }
@@ -385,7 +396,7 @@
     </div>
 
 
-    <!-- PANEL ĐIỂM SỐ V4.5 -->
+    <!-- PANEL ĐIỂM SỐ V4.6 -->
     <div id="ds" class="panel">
       <div class="toolbar">
         <input type="date" id="ds-date">
@@ -481,6 +492,36 @@
           <tbody id="list-homework"><tr><td colspan="7" style="text-align:center;color:var(--text-muted)">Chọn Khối + Lớp để xem bài tập đã giao.</td></tr></tbody>
         </table>
       </div>
+
+      <h3 class="section-title" style="margin-top:34px;color:#0F4C81"><i class="bi bi-calendar-week-fill"></i> 3. Thời khóa biểu Trung tâm - Giáo viên nhập thủ công</h3>
+      <div class="sub-card">
+        <div class="mini-note" style="margin-bottom:12px">Mỗi buổi học được cố định <b>1 giờ 30 phút</b>. Giáo viên nhập các ngày học, giờ bắt đầu và số buổi/tuần; hệ thống tự tính giờ kết thúc để hiển thị cho phụ huynh.</div>
+        <input type="hidden" id="sch-id">
+        <div class="schedule-editor-grid">
+          <select id="sch-grade"><option value="">-- Khối --</option></select>
+          <input id="sch-class" type="text" placeholder="Lớp, VD: A (Nâng cao)">
+          <input id="sch-days" type="text" placeholder="Ngày học, VD: Thứ 3 & Chủ nhật">
+          <input id="sch-start-time" type="time" title="Giờ bắt đầu học">
+          <input id="sch-sessions-week" type="number" min="1" max="7" step="1" placeholder="Số buổi/tuần">
+          <div class="schedule-fixed-duration"><i class="bi bi-clock-history" style="margin-right:7px"></i> 1 giờ 30 phút / buổi</div>
+          <input id="sch-teacher" type="text" placeholder="Giáo viên">
+          <input id="sch-room" type="text" placeholder="Phòng học">
+          <select id="sch-status"><option>Đang nhận HS</option><option>Đã đủ sĩ số</option><option>Tạm dừng</option></select>
+          <input id="sch-note" type="text" placeholder="Ghi chú" class="full">
+        </div>
+        <div class="report-actions">
+          <button class="btn btn-success" onclick="saveScheduleAdmin()"><i class="bi bi-floppy"></i> Lưu Thời Khóa Biểu</button>
+          <button class="btn" style="background:#F1F5F9" onclick="clearScheduleForm()">Nhập dòng mới</button>
+          <button class="btn btn-primary" onclick="loadSchedulesAdmin()"><i class="bi bi-arrow-clockwise"></i> Tải lại</button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead><tr><th>Khối - Lớp</th><th>Ngày học</th><th>Giờ học</th><th>Buổi/tuần</th><th>GV / Phòng</th><th>Tình trạng</th><th>Ghi chú</th><th>Thao tác</th></tr></thead>
+            <tbody id="list-schedules-admin"><tr><td colspan="8" style="text-align:center">Bấm <b>Tải lại</b> hoặc mở tab Tài liệu để xem lịch.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
     <!-- PANEL BÁO CÁO -->
@@ -535,68 +576,56 @@
         </table>
       </div>
 
-      <h3 class="section-title" style="color:var(--success)"><i class="bi bi-cash"></i> 3. Danh sách Đã đóng tiền (Tiền mặt)</h3>
-      <div class="table-responsive" style="margin-bottom:32px">
-        <table>
-          <thead><tr><th>STT</th><th>Họ và tên</th><th>Lớp</th><th>Ngày nộp</th><th>Số tiền</th></tr></thead>
-          <tbody id="list-tk-paid-cash"></tbody>
-        </table>
+      <div id="report-sec-3" class="report-collapsible">
+        <button class="report-collapse-head" type="button" onclick="toggleReportSection('report-sec-3')">
+          <span class="report-collapse-title" style="color:var(--success)"><i class="bi bi-cash"></i> 3. Danh sách Đã đóng tiền (Tiền mặt)</span>
+          <span class="report-collapse-meta"><span id="report-count-3" class="report-count">0</span><i class="bi bi-chevron-down report-chevron"></i></span>
+        </button>
+        <div class="report-collapse-body"><div class="table-responsive"><table><thead><tr><th>STT</th><th>Họ và tên</th><th>Lớp</th><th>Ngày nộp</th><th>Số tiền</th></tr></thead><tbody id="list-tk-paid-cash"></tbody></table></div></div>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 class="section-title" style="margin:0; color:var(--primary)"><i class="bi bi-bank"></i> 4. Danh sách Thu Chuyển Khoản</h3>
-        <button class="btn btn-success" onclick="exportTransferExcel()"><i class="bi bi-file-earmark-excel-fill"></i> Xuất Excel Thuế</button>
-      </div>
-      <div class="table-responsive" style="margin-bottom:32px">
-        <table id="table-transfer">
-          <thead><tr><th>STT</th><th>Họ và tên</th><th>Lớp</th><th style="text-align:right">Số tiền</th><th>Ngày đóng</th><th>Ghi chú</th></tr></thead>
-          <tbody id="list-tk-transfer"></tbody>
-        </table>
+      <div id="report-sec-4" class="report-collapsible">
+        <div class="report-collapse-head" onclick="toggleReportSection('report-sec-4')" role="button" tabindex="0">
+          <span class="report-collapse-title" style="color:var(--primary)"><i class="bi bi-bank"></i> 4. Danh sách Thu Chuyển Khoản</span>
+          <span class="report-collapse-meta"><span id="report-count-4" class="report-count">0</span><button class="btn btn-success" style="height:36px;padding:0 12px" onclick="event.stopPropagation();exportTransferExcel()"><i class="bi bi-file-earmark-excel-fill"></i> Xuất Excel</button><i class="bi bi-chevron-down report-chevron"></i></span>
+        </div>
+        <div class="report-collapse-body"><div class="table-responsive"><table id="table-transfer"><thead><tr><th>STT</th><th>Họ và tên</th><th>Lớp</th><th style="text-align:right">Số tiền</th><th>Ngày đóng</th><th>Ghi chú</th></tr></thead><tbody id="list-tk-transfer"></tbody></table></div></div>
       </div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-        <h3 class="section-title" style="color:var(--danger); margin:0"><i class="bi bi-exclamation-octagon-fill"></i> 5. Danh sách Chưa đóng (Tháng này)</h3>
-        <button class="btn btn-warning" onclick="guiNhacHocPhiBaoCao()"><i class="bi bi-bell-fill"></i> Nhắc học phí danh sách này</button>
-      </div>
-      <div class="table-responsive" style="margin-bottom:32px">
-        <table><thead><tr><th>STT</th><th>Họ tên</th><th>Lớp</th><th>SĐT / Tên Zalo</th><th>Số tiền</th><th style="text-align:center">Nhắc</th></tr></thead><tbody id="list-tk"></tbody></table>
-      </div>
-      
-      <h3 class="section-title" style="color:#B91C1C;"><i class="bi bi-exclamation-triangle-fill"></i> 6. Nợ 2 tháng liên tiếp (<span id="prev-month-label">Tháng trước</span> & Tháng này)</h3>
-      <div class="table-responsive" style="margin-bottom:32px">
-        <table><thead><tr><th>STT</th><th>Họ tên</th><th>Lớp</th><th>SĐT Phụ huynh</th></tr></thead><tbody id="list-tk-2m"></tbody></table>
+      <div id="report-sec-5" class="report-collapsible">
+        <div class="report-collapse-head" onclick="toggleReportSection('report-sec-5')" role="button" tabindex="0">
+          <span class="report-collapse-title" style="color:var(--danger)"><i class="bi bi-exclamation-octagon-fill"></i> 5. Danh sách Chưa đóng (Tháng này)</span>
+          <span class="report-collapse-meta"><span id="report-count-5" class="report-count">0</span><button class="btn btn-warning" style="height:36px;padding:0 12px" onclick="event.stopPropagation();guiNhacHocPhiBaoCao()"><i class="bi bi-bell-fill"></i> Nhắc học phí</button><i class="bi bi-chevron-down report-chevron"></i></span>
+        </div>
+        <div class="report-collapse-body"><div class="table-responsive"><table><thead><tr><th>STT</th><th>Họ tên</th><th>Lớp</th><th>SĐT / Tên Zalo</th><th>Số tiền</th><th style="text-align:center">Nhắc</th></tr></thead><tbody id="list-tk"></tbody></table></div></div>
       </div>
 
-      <h3 class="section-title" style="color:var(--warning)"><i class="bi bi-person-dash-fill"></i> 7. Học sinh đang vắng K (không phép) từ 2 buổi học liên tiếp gần nhất</h3>
-      <div class="table-responsive">
-        <table><thead><tr><th>STT</th><th>Họ tên</th><th>Lớp</th><th>SĐT Phụ huynh</th><th>Chuỗi K liên tiếp gần nhất</th></tr></thead><tbody id="list-tk-absent"></tbody></table>
+      <div id="report-sec-6" class="report-collapsible">
+        <button class="report-collapse-head" type="button" onclick="toggleReportSection('report-sec-6')">
+          <span class="report-collapse-title" style="color:#B91C1C"><i class="bi bi-exclamation-triangle-fill"></i> 6. Nợ 2 tháng liên tiếp (<span id="prev-month-label">Tháng trước</span> & Tháng này)</span>
+          <span class="report-collapse-meta"><span id="report-count-6" class="report-count">0</span><i class="bi bi-chevron-down report-chevron"></i></span>
+        </button>
+        <div class="report-collapse-body"><div class="table-responsive"><table><thead><tr><th>STT</th><th>Họ tên</th><th>Lớp</th><th>SĐT Phụ huynh</th></tr></thead><tbody id="list-tk-2m"></tbody></table></div></div>
+      </div>
+
+      <div id="report-sec-7" class="report-collapsible">
+        <button class="report-collapse-head" type="button" onclick="toggleReportSection('report-sec-7')">
+          <span class="report-collapse-title" style="color:var(--warning)"><i class="bi bi-person-dash-fill"></i> 7. Học sinh đang vắng K từ 2 buổi liên tiếp gần nhất</span>
+          <span class="report-collapse-meta"><span id="report-count-7" class="report-count">0</span><i class="bi bi-chevron-down report-chevron"></i></span>
+        </button>
+        <div class="report-collapse-body"><div class="table-responsive"><table><thead><tr><th>STT</th><th>Họ tên</th><th>Lớp</th><th>SĐT Phụ huynh</th><th>Chuỗi K liên tiếp gần nhất</th></tr></thead><tbody id="list-tk-absent"></tbody></table></div></div>
       </div>
     </div>
 
     <!-- PANEL CÀI ĐẶT -->
     <div id="st" class="panel">
-      <h3 class="section-title"><i class="bi bi-sliders"></i> Cài đặt Hệ thống V4.5</h3>
+      <h3 class="section-title"><i class="bi bi-sliders"></i> Cài đặt Hệ thống V4.6</h3>
       <div style="background:#EFF6FF;border:1px solid #BFDBFE;padding:20px;border-radius:var(--radius-md);margin-bottom:20px;">
-        <h4 style="color:var(--primary-dark);margin-bottom:8px;"><i class="bi bi-database-check"></i> CẬP NHẬT CẤU TRÚC DỮ LIỆU V4.5</h4>
-        <p style="color:var(--text-muted);margin-bottom:12px;">Tạo/migrate Scores, Schedules, Registrations và cấu hình xác thực Admin. Chỉ cần chạy một lần sau khi thay Code.gs.</p>
-        <button class="btn btn-primary" onclick="runSetupV4()"><i class="bi bi-tools"></i> Chạy setup V4.5</button>
+        <h4 style="color:var(--primary-dark);margin-bottom:8px;"><i class="bi bi-database-check"></i> CẬP NHẬT CẤU TRÚC DỮ LIỆU V4.6</h4>
+        <p style="color:var(--text-muted);margin-bottom:12px;">Bổ sung/migrate cấu trúc V4.6, đặc biệt Thời khóa biểu: giờ bắt đầu, số buổi/tuần và thời lượng cố định 90 phút/buổi. Chỉ chạy một lần sau khi thay Code.gs.</p>
+        <button class="btn btn-primary" onclick="runSetupV4()"><i class="bi bi-tools"></i> Chạy setup V4.6</button>
       </div>
 
-      <div class="sub-card">
-        <h4 style="margin-bottom:12px;color:#0F4C81"><i class="bi bi-calendar-week"></i> Thời khóa biểu & Tuyển sinh</h4>
-        <input type="hidden" id="sch-id">
-        <div class="schedule-editor-grid">
-          <select id="sch-grade"><option value="">-- Khối --</option></select>
-          <input id="sch-class" type="text" placeholder="Lớp, VD: A (Nâng cao)">
-          <input id="sch-days" type="text" placeholder="Thứ & giờ học">
-          <input id="sch-teacher" type="text" placeholder="Giáo viên">
-          <input id="sch-room" type="text" placeholder="Phòng học">
-          <select id="sch-status"><option>Đang nhận HS</option><option>Đã đủ sĩ số</option><option>Tạm dừng</option></select>
-          <input id="sch-note" type="text" placeholder="Ghi chú" class="full">
-        </div>
-        <div class="report-actions"><button class="btn btn-success" onclick="saveScheduleAdmin()"><i class="bi bi-floppy"></i> Lưu Thời Khóa Biểu</button><button class="btn" style="background:#F1F5F9" onclick="clearScheduleForm()">Nhập dòng mới</button><button class="btn btn-primary" onclick="loadSchedulesAdmin()">Tải lại</button></div>
-        <div class="table-responsive"><table><thead><tr><th>Khối - Lớp</th><th>Thứ & Giờ</th><th>GV / Phòng</th><th>Tình trạng</th><th>Ghi chú</th><th>Thao tác</th></tr></thead><tbody id="list-schedules-admin"><tr><td colspan="6" style="text-align:center">Chưa tải.</td></tr></tbody></table></div>
-      </div>
 
       <div class="sub-card">
         <h4 style="margin-bottom:12px;color:#7C3AED"><i class="bi bi-chat-text"></i> Nội dung Bot trả lời khi phụ huynh hỏi đăng ký</h4>
@@ -662,7 +691,7 @@
   // ============================================
   // CẤU HÌNH API - LIÊN KẾT VỚI GOOGLE SHEET
   // ============================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbzMmMGBSCkuzHVYFSW71M1G8SwMPoAI26s6NEfm9U8KBdzoVJfmd3jIZ8o9KotKoY5R/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbx1nojHKAq41LshsADFnD0WUsB9JiVMxQrvWf1UjjI5lRmNWa-aeCRTLsRVRDL4DJgrPA/exec";
   const CENTER_INFO = {
     address: '30/11D Phước Tường, Phước Long, Nam Nha Trang',
     phone: '0972466347',
@@ -708,7 +737,7 @@
     const text=await response.text();let result;try{result=JSON.parse(text);}catch(e){throw new Error('API không trả JSON. HTTP '+response.status+': '+text.slice(0,100));}
     if(!response.ok)throw new Error(result.message||'HTTP '+response.status);
     if(result.success===false){ if(/Phiên đăng nhập/i.test(result.message||'')) logoutAdmin(false); throw new Error(result.message||'Thao tác thất bại'); }
-    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.5] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
+    const totalMs=Math.round(performance.now()-started);if((result.meta?.server_ms||totalMs)>800)console.info(`[V4.6] ${action}: server ${result.meta?.server_ms??'?'} ms, tổng ${totalMs} ms`);
     if(method==='GET')CLIENT_GET_CACHE.set(cacheKey,{value:result,expires:Date.now()+12000});
     else{clearClientApiCache();TAB_LOADED.tk=false;try{sessionStorage.removeItem('anphuc_v45_initial');}catch(e){}const qActions=new Set(['saveAttendance','sendTuitionMessage','sendBulkTuitionReminders','sendClassLessonReport','sendBulkClassLessonReports','sendStudentSituationReport','sendBulkStudentSituationReports','sendMultiMonthTuitionReminder','sendBulkMultiMonthTuitionReminders','saveScores','saveAndSendHomework','processZaloQueue','wakeupZaloQueue','submitRegistration']);if(qActions.has(action)&&isAdminAuthenticated())setTimeout(refreshZaloQueueStatus,250);}
     return result;
@@ -794,10 +823,12 @@
 
     if (id === 'tk' && !TAB_LOADED.tk) { TAB_LOADED.tk = true; loadStats(); }
     if (id === 'ds' && !TAB_LOADED.ds) { TAB_LOADED.ds = true; }
-    if (id === 'tl' && !TAB_LOADED.tl) { TAB_LOADED.tl = true; }
-    if (id === 'st' && !TAB_LOADED.st) { TAB_LOADED.st = true; loadSchedulesAdmin(); loadRegistrationsAdmin(); loadRegistrationSettingsAdmin(); }
+    if (id === 'tl' && !TAB_LOADED.tl) { TAB_LOADED.tl = true; loadSchedulesAdmin(); }
+    if (id === 'st' && !TAB_LOADED.st) { TAB_LOADED.st = true; loadRegistrationsAdmin(); loadRegistrationSettingsAdmin(); }
   }
 
+  function toggleReportSection(id) { const el=document.getElementById(id); if(el) el.classList.toggle('open'); }
+  function setReportCount(id, value) { const el=document.getElementById(id); if(el) el.textContent=String(Number(value||0)); }
   function loading(s) { document.getElementById('loader').style.display=s?'block':'none'; }
   function showToast(msg, type='success') { const t = document.getElementById('toast'); t.innerHTML = (type==='success'?'<i class="bi bi-check-circle-fill"></i> ':'<i class="bi bi-exclamation-triangle-fill"></i> ') + msg; t.className = type + " show"; setTimeout(() => { t.className = t.className.replace("show", ""); }, 4000); }
   function showError(e) { showToast(e.message || "Có lỗi xảy ra", 'error'); }
@@ -811,7 +842,7 @@
       document.getElementById('dash-unpaid').innerText = r.data.unpaid_count;
     } catch(e) { console.error(e); }
   }
-  // HỌC SINH - V4.5: phân trang + debounce, không kéo toàn bộ danh sách về trình duyệt.
+  // HỌC SINH - V4.6: phân trang + debounce, không kéo toàn bộ danh sách về trình duyệt.
   function renderStudentPage(pageData) {
     const page = pageData || {};
     CURRENT_STUDENTS = Array.isArray(page.items) ? page.items : [];
@@ -1047,7 +1078,7 @@
   }
 
 
-  // ĐIỂM SỐ V4.5
+  // ĐIỂM SỐ V4.6
   function suggestScoreComment(score){const n=Number(score);if(!Number.isFinite(n))return'';if(n>=8.5)return'Nắm chắc kiến thức, phát huy tốt';if(n>=6.5)return'Hiểu bài, cần cẩn thận hơn khi trình bày';return'Cần ôn kỹ lại lý thuyết và làm thêm bài tập';}
   function scoreChanged(index){const score=document.querySelector(`.score-input[data-index="${index}"]`),comment=document.querySelector(`.score-comment[data-index="${index}"]`);if(score&&comment&&!comment.value.trim()&&score.value!=='')comment.value=suggestScoreComment(score.value);}
   function setQuickComment(index,value){const el=document.querySelector(`.score-comment[data-index="${index}"]`);if(el){el.value=value;el.focus();}}
@@ -1098,13 +1129,13 @@
   }
 
 
-  // V4.5 - QUẢN LÝ LỊCH HỌC & TUYỂN SINH
+  // V4.6 - QUẢN LÝ LỊCH HỌC & TUYỂN SINH
   async function loadRegistrationSettingsAdmin(){try{const r=await callAPI('getSettings');const x=r.data||{};document.getElementById('registration-guide-text').value=x.registration_guide_text||'';document.getElementById('registration-notify-group').value=x.registration_notify_group||'';document.getElementById('registration-notify-phone').value=x.registration_notify_phone||'';}catch(e){console.warn(e);}}
   async function saveRegistrationSettingsAdmin(){try{loading(true);await callAPI('saveRegistrationSettings',{registration_guide_text:document.getElementById('registration-guide-text').value.trim(),registration_notify_group:document.getElementById('registration-notify-group').value.trim(),registration_notify_phone:document.getElementById('registration-notify-phone').value.trim()},'POST');showToast('Đã lưu thông tin tuyển sinh.');}catch(e){showError(e);}finally{loading(false);}}
-  function clearScheduleForm(){['sch-id','sch-class','sch-days','sch-teacher','sch-room','sch-note'].forEach(id=>document.getElementById(id).value='');document.getElementById('sch-grade').value='';document.getElementById('sch-status').value='Đang nhận HS';}
-  async function loadSchedulesAdmin(){try{const r=await callAPI('getSchedules');SCHEDULE_ROWS=Array.isArray(r.data)?r.data:[];const tb=document.getElementById('list-schedules-admin');tb.innerHTML=SCHEDULE_ROWS.length?SCHEDULE_ROWS.map((x,i)=>`<tr><td data-label="Lớp"><b>K${escapeHtml(x.grade)}-${escapeHtml(x.class)}</b></td><td data-label="Thứ & Giờ">${escapeHtml(x.days_time||'')}</td><td data-label="GV / Phòng">${escapeHtml(x.teacher||'--')} / ${escapeHtml(x.room||'--')}</td><td data-label="Tình trạng">${escapeHtml(x.status||'')}</td><td data-label="Ghi chú">${escapeHtml(x.note||'')}</td><td data-label="Thao tác"><button class="btn-icon edit" onclick="editScheduleAdmin(${i})"><i class="bi bi-pencil-fill"></i></button><button class="btn-icon delete" onclick="deleteScheduleAdmin('${escapeJsSingle(x.schedule_id)}')"><i class="bi bi-trash-fill"></i></button></td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center">Chưa có lịch học.</td></tr>';}catch(e){showError(e);}}
-  function editScheduleAdmin(i){const x=SCHEDULE_ROWS[i];if(!x)return;document.getElementById('sch-id').value=x.schedule_id||'';document.getElementById('sch-grade').value=x.grade||'';document.getElementById('sch-class').value=x.class||'';document.getElementById('sch-days').value=x.days_time||'';document.getElementById('sch-teacher').value=x.teacher||'';document.getElementById('sch-room').value=x.room||'';document.getElementById('sch-status').value=x.status||'Đang nhận HS';document.getElementById('sch-note').value=x.note||'';document.getElementById('sch-days').focus();}
-  async function saveScheduleAdmin(){const data={schedule_id:document.getElementById('sch-id').value,grade:document.getElementById('sch-grade').value,className:document.getElementById('sch-class').value.trim(),days_time:document.getElementById('sch-days').value.trim(),teacher:document.getElementById('sch-teacher').value.trim(),room:document.getElementById('sch-room').value.trim(),status:document.getElementById('sch-status').value,note:document.getElementById('sch-note').value.trim()};try{loading(true);await callAPI('saveSchedule',data,'POST');showToast('Đã lưu thời khóa biểu.');clearScheduleForm();await loadSchedulesAdmin();}catch(e){showError(e);}finally{loading(false);}}
+  function clearScheduleForm(){['sch-id','sch-class','sch-days','sch-start-time','sch-sessions-week','sch-teacher','sch-room','sch-note'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('sch-grade').value='';document.getElementById('sch-status').value='Đang nhận HS';}
+  async function loadSchedulesAdmin(){try{const r=await callAPI('getSchedules');SCHEDULE_ROWS=Array.isArray(r.data)?r.data:[];const tb=document.getElementById('list-schedules-admin');if(!tb)return;tb.innerHTML=SCHEDULE_ROWS.length?SCHEDULE_ROWS.map((x,i)=>`<tr><td data-label="Lớp"><b>K${escapeHtml(x.grade)}-${escapeHtml(x.class)}</b></td><td data-label="Ngày học">${escapeHtml(x.days_time||'--')}</td><td data-label="Giờ học"><b>${escapeHtml(x.start_time||'--')}${x.end_time?' - '+escapeHtml(x.end_time):''}</b><div class="mini-note">1 giờ 30 phút/buổi</div></td><td data-label="Buổi/tuần" style="text-align:center;font-weight:700">${Number(x.sessions_per_week||0)||'--'}</td><td data-label="GV / Phòng">${escapeHtml(x.teacher||'--')} / ${escapeHtml(x.room||'--')}</td><td data-label="Tình trạng">${escapeHtml(x.status||'')}</td><td data-label="Ghi chú">${escapeHtml(x.note||'')}</td><td data-label="Thao tác"><button class="btn-icon edit" onclick="editScheduleAdmin(${i})"><i class="bi bi-pencil-fill"></i></button><button class="btn-icon delete" onclick="deleteScheduleAdmin('${escapeJsSingle(x.schedule_id)}')"><i class="bi bi-trash-fill"></i></button></td></tr>`).join(''):'<tr><td colspan="8" style="text-align:center">Chưa có lịch học.</td></tr>';}catch(e){showError(e);}}
+  function editScheduleAdmin(i){const x=SCHEDULE_ROWS[i];if(!x)return;document.getElementById('sch-id').value=x.schedule_id||'';document.getElementById('sch-grade').value=x.grade||'';document.getElementById('sch-class').value=x.class||'';document.getElementById('sch-days').value=x.days_time||'';document.getElementById('sch-start-time').value=x.start_time||'';document.getElementById('sch-sessions-week').value=x.sessions_per_week||'';document.getElementById('sch-teacher').value=x.teacher||'';document.getElementById('sch-room').value=x.room||'';document.getElementById('sch-status').value=x.status||'Đang nhận HS';document.getElementById('sch-note').value=x.note||'';document.getElementById('sch-days').focus();}
+  async function saveScheduleAdmin(){const data={schedule_id:document.getElementById('sch-id').value,grade:document.getElementById('sch-grade').value,className:document.getElementById('sch-class').value.trim(),days_time:document.getElementById('sch-days').value.trim(),start_time:document.getElementById('sch-start-time').value,sessions_per_week:document.getElementById('sch-sessions-week').value,teacher:document.getElementById('sch-teacher').value.trim(),room:document.getElementById('sch-room').value.trim(),status:document.getElementById('sch-status').value,note:document.getElementById('sch-note').value.trim()};if(!data.grade||!data.className||!data.days_time||!data.start_time||!data.sessions_per_week)return showToast('Hãy nhập đủ Khối, Lớp, ngày học, giờ bắt đầu và số buổi/tuần.','error');try{loading(true);await callAPI('saveSchedule',data,'POST');showToast('Đã lưu thời khóa biểu. Mỗi buổi 1 giờ 30 phút.');clearScheduleForm();await loadSchedulesAdmin();}catch(e){showError(e);}finally{loading(false);}}
   async function deleteScheduleAdmin(id){if(!confirm('Xóa dòng thời khóa biểu này?'))return;try{loading(true);await callAPI('deleteSchedule',{schedule_id:id},'POST');showToast('Đã xóa lịch học.');await loadSchedulesAdmin();}catch(e){showError(e);}finally{loading(false);}}
   async function loadRegistrationsAdmin(){try{const r=await callAPI('getRegistrations');const rows=Array.isArray(r.data)?r.data:[],tb=document.getElementById('list-registrations');tb.innerHTML=rows.length?rows.map(x=>{const st=String(x.status||'NEW').toUpperCase(),badge=st==='APPROVED'?'badge badge-success':'badge status-new',action=st==='APPROVED'?'<span style="color:var(--success);font-weight:700">Đã duyệt</span>':`<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="reg-class-${escapeHtml(x.reg_id)}" style="height:36px;padding:0 8px">${(Number(x.grade)>=6&&Number(x.grade)<=9?['A','B','C']:['Chung']).map(c=>`<option value="${c}">${c}</option>`).join('')}</select><button class="btn btn-success" style="height:36px;padding:0 10px" onclick="approveRegistrationAdmin('${escapeJsSingle(x.reg_id)}','${escapeJsSingle(x.student_name)}')">Duyệt vào HS</button></div>`;return`<tr><td data-label="Thời gian">${escapeHtml(x.created_at||'')}</td><td data-label="Học sinh"><b>${escapeHtml(x.student_name||'')}</b></td><td data-label="Khối">${escapeHtml(x.grade||'')}</td><td data-label="SĐT">${escapeHtml(x.parent_phone||'')}</td><td data-label="Nguyện vọng">${escapeHtml(x.note||'')}</td><td data-label="Trạng thái"><span class="${badge}">${escapeHtml(st)}</span></td><td data-label="Duyệt">${action}</td></tr>`;}).join(''):'<tr><td colspan="7" style="text-align:center">Chưa có đăng ký.</td></tr>';}catch(e){showError(e);}}
   async function approveRegistrationAdmin(id,name){const cls=document.getElementById(`reg-class-${id}`)?.value;if(!cls)return showToast('Chọn lớp chính thức.','error');try{loading(true);const r=await callAPI('approveRegistration',{reg_id:id,className:cls},'POST');showToast(`Đã duyệt vào danh sách học sinh. Mã HS: ${r.data?.student_id||''}`);await loadRegistrationsAdmin();loadHS();updateDashboardStats();}catch(e){showError(e);}finally{loading(false);}}
@@ -1117,7 +1148,7 @@
   async function flushZaloQueue() {
     try { loading(true); const r=await callAPI('wakeupZaloQueue',{rounds:3},'POST'); const x=r.data||{}; showToast(`Đã xử lý ${x.processed||0} tin; còn chờ ${x.queue?.waiting||0}.`); await refreshZaloQueueStatus(); } catch(e){showError(e);} finally{loading(false);}  }
 
-  // PUBLIC CHATBOT V4.5
+  // PUBLIC CHATBOT V4.6
   function initPublicChat(){ const body=document.getElementById('chat-body'); if(!body)return; }
   function addChatBubble(text,who='bot',html=false){const body=document.getElementById('chat-body'),row=document.createElement('div');row.className='chat-row '+who;const bubble=document.createElement('div');bubble.className='chat-bubble';if(html)bubble.innerHTML=text;else bubble.textContent=text;row.appendChild(bubble);body.appendChild(row);body.scrollTop=body.scrollHeight;return bubble;}
   function resetChatState(){CHAT_STATE={mode:null,candidate:null};}
@@ -1127,9 +1158,9 @@
   async function handleParentName(name){try{const r=await callAPI('findParentStudentCandidates',{student_name:name},'GET'),rows=Array.isArray(r.data)?r.data:[];if(!rows.length){addChatBubble('Chưa tìm thấy học sinh phù hợp. Quý phụ huynh có thể thử nhập tên ngắn hơn, ví dụ chỉ tên hoặc tên đệm + tên. Hệ thống không phân biệt chữ hoa/thường và có dấu/không dấu.');return;}if(rows.length===1){const x=rows[0];chooseParentCandidate(x.lookup_token,x.name,x.class_info);return;}const html='<b>Tìm thấy nhiều học sinh phù hợp. Vui lòng chọn đúng tên và lớp:</b><div class="chat-quick" style="padding:10px 0 0">'+rows.map(x=>`<button onclick="chooseParentCandidate('${escapeJsSingle(x.lookup_token)}','${escapeJsSingle(x.name)}','${escapeJsSingle(x.class_info)}')">${escapeHtml(x.name)} - ${escapeHtml(x.class_info)}</button>`).join('')+'</div><div class="mini-note" style="margin-top:8px">Nếu chưa thấy đúng học sinh, hãy nhập thêm một phần họ hoặc tên đệm để thu hẹp kết quả.</div>';addChatBubble(html,'bot',true);CHAT_STATE.mode='choose_candidate';}catch(e){addChatBubble(e.message||'Không thể tìm học sinh lúc này.');}}
   function currentSchoolYearStart(){const n=new Date();return n.getMonth()+1>=9?n.getFullYear():n.getFullYear()-1;}
   async function handleParentPhone(phone){const c=CHAT_STATE.candidate;if(!c)return startParentLookup();try{const r=await callAPI('verifyParentStudent',{lookup_token:c.lookup_token,parent_phone:phone,school_year_start:currentSchoolYearStart()},'POST');renderVerifiedParentCard(r.data||{});resetChatState();}catch(e){addChatBubble(e.message||'Số điện thoại không khớp.');}}
-  function renderVerifiedParentCard(s){const schedule=(s.schedule||[]).length?(s.schedule||[]).map(x=>`<div class="chat-metric"><b>${escapeHtml(x.days_time||'')}</b><br>GV: ${escapeHtml(x.teacher||'--')} | Phòng: ${escapeHtml(x.room||'--')}<br>${escapeHtml(x.status||'')}</div>`).join(''):'<div class="chat-metric">Chưa cập nhật thời khóa biểu.</div>';const months=(s.attendance_months||[]).length?`<div class="table-responsive" style="margin-top:8px"><table><thead><tr><th>Tháng</th><th>Số buổi</th><th>Vắng</th><th>P</th><th>K</th></tr></thead><tbody>${s.attendance_months.map(x=>`<tr><td>${x.month}/${x.year}</td><td>${x.total_sessions}</td><td>${x.absent}</td><td>${x.permitted}</td><td>${x.unexcused}</td></tr>`).join('')}</tbody></table></div>`:'Chưa có dữ liệu chuyên cần.';const scores=(s.scores||[]).length?`<div class="table-responsive"><table><thead><tr><th>Ngày</th><th>Bài kiểm tra</th><th>Điểm</th><th>Nhận xét</th></tr></thead><tbody>${s.scores.map(x=>`<tr><td>${formatDateVN(x.test_date)}</td><td>${escapeHtml(x.test_type_label)} - ${escapeHtml(x.test_title||'')}</td><td><b>${escapeHtml(x.score)}/10</b></td><td>${escapeHtml(x.comment||'--')}</td></tr>`).join('')}</tbody></table></div>`:'Chưa có điểm.';const t=s.tuition||{},paid=(t.paid||[]).map(x=>`${escapeHtml(x.label||'')}: ${Number(x.amount||0).toLocaleString('vi-VN')}đ (${escapeHtml(x.paid_at||'')})`).join('<br>')||'Chưa ghi nhận',unpaid=(t.unpaid||[]).map(x=>escapeHtml(x.label||'')).join(', ')||'Không có';addChatBubble(`<div class="chat-card"><h3>${escapeHtml(s.name)} - ${escapeHtml(s.class_info)} | Năm học ${escapeHtml(s.school_year||'')}</h3><b>📅 Lịch học hiện tại</b><div class="chat-grid" style="margin-top:7px">${schedule}</div><div style="margin-top:13px"><b>🗓️ Chuyên cần theo tháng</b>${months}</div><div style="margin-top:13px"><b>📊 Điểm số & nhận xét</b>${scores}</div><div class="chat-grid" style="margin-top:13px"><div class="chat-metric"><b>💳 Đã đóng học phí</b><br>${paid}</div><div class="chat-metric"><b>⏳ Chưa đóng</b><br>${unpaid}<br><b>${Number(t.unpaid_total||0).toLocaleString('vi-VN')} đ</b></div></div></div>`,'bot',true);}
-  function showScheduleChoices(){resetChatState();CHAT_STATE.mode='schedule';addChatBubble('Quý phụ huynh chọn khối cần xem thời khóa biểu:','bot');addChatBubble(`<div class="chat-quick" style="padding:0">${KHOI.map(k=>`<button onclick="loadPublicSchedule('${k}')">Khối ${k}</button>`).join('')}<button onclick="loadPublicSchedule('')">Tất cả lớp</button></div>`,'bot',true);}
-  async function loadPublicSchedule(grade=''){try{const r=await callAPI('getPublicSchedule',{grade},'GET'),rows=Array.isArray(r.data)?r.data:[];if(!rows.length){addChatBubble('Chưa có thời khóa biểu phù hợp được cập nhật.');return;}const html=`<div class="chat-card"><h3>📅 Thời khóa biểu ${grade?'Khối '+escapeHtml(grade):'các lớp'}</h3><div class="table-responsive"><table><thead><tr><th>Khối - Lớp</th><th>Ca học / Thứ - Giờ</th><th>GV / Phòng</th><th>Tình trạng</th><th>Ghi chú</th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${escapeHtml(x.class_info)}</b></td><td>${escapeHtml(x.days_time||'')}</td><td>${escapeHtml(x.teacher||'--')} / ${escapeHtml(x.room||'--')}</td><td>${escapeHtml(x.status||'')}</td><td>${escapeHtml(x.note||'')}</td></tr>`).join('')}</tbody></table></div></div>`;addChatBubble(html,'bot',true);resetChatState();}catch(e){addChatBubble(e.message||'Không tải được lịch học.');}}
+  function renderVerifiedParentCard(s){const schedule=(s.schedule||[]).length?(s.schedule||[]).map(x=>`<div class="chat-metric"><b>${escapeHtml(x.days_time||'')}</b><br>⏰ ${escapeHtml(x.start_time||'--')}${x.end_time?' - '+escapeHtml(x.end_time):''} · 1 giờ 30 phút/buổi<br>📚 ${Number(x.sessions_per_week||0)||'--'} buổi/tuần<br>GV: ${escapeHtml(x.teacher||'--')} | Phòng: ${escapeHtml(x.room||'--')}<br>${escapeHtml(x.status||'')}</div>`).join(''):'<div class="chat-metric">Chưa cập nhật thời khóa biểu.</div>';const months=(s.attendance_months||[]).length?`<div class="table-responsive" style="margin-top:8px"><table><thead><tr><th>Tháng</th><th>Số buổi</th><th>Vắng</th><th>P</th><th>K</th></tr></thead><tbody>${s.attendance_months.map(x=>`<tr><td>${x.month}/${x.year}</td><td>${x.total_sessions}</td><td>${x.absent}</td><td>${x.permitted}</td><td>${x.unexcused}</td></tr>`).join('')}</tbody></table></div>`:'Chưa có dữ liệu chuyên cần.';const scores=(s.scores||[]).length?`<div class="table-responsive"><table><thead><tr><th>Ngày</th><th>Bài kiểm tra</th><th>Điểm</th><th>Nhận xét</th></tr></thead><tbody>${s.scores.map(x=>`<tr><td>${formatDateVN(x.test_date)}</td><td>${escapeHtml(x.test_type_label)} - ${escapeHtml(x.test_title||'')}</td><td><b>${escapeHtml(x.score)}/10</b></td><td>${escapeHtml(x.comment||'--')}</td></tr>`).join('')}</tbody></table></div>`:'Chưa có điểm.';const t=s.tuition||{},paid=(t.paid||[]).map(x=>`${escapeHtml(x.label||'')}: ${Number(x.amount||0).toLocaleString('vi-VN')}đ (${escapeHtml(x.paid_at||'')})`).join('<br>')||'Chưa ghi nhận',unpaid=(t.unpaid||[]).map(x=>escapeHtml(x.label||'')).join(', ')||'Không có';addChatBubble(`<div class="chat-card"><h3>${escapeHtml(s.name)} - ${escapeHtml(s.class_info)} | Năm học ${escapeHtml(s.school_year||'')}</h3><b>📅 Lịch học hiện tại</b><div class="chat-grid" style="margin-top:7px">${schedule}</div><div style="margin-top:13px"><b>🗓️ Chuyên cần theo tháng</b>${months}</div><div style="margin-top:13px"><b>📊 Điểm số & nhận xét</b>${scores}</div><div class="chat-grid" style="margin-top:13px"><div class="chat-metric"><b>💳 Đã đóng học phí</b><br>${paid}</div><div class="chat-metric"><b>⏳ Chưa đóng</b><br>${unpaid}<br><b>${Number(t.unpaid_total||0).toLocaleString('vi-VN')} đ</b></div></div></div>`,'bot',true);}
+  function showScheduleChoices(){resetChatState();CHAT_STATE.mode='schedule';addChatBubble('Quý phụ huynh vui lòng chọn <b>một khối</b>. Hệ thống sẽ hiển thị thời khóa biểu của tất cả các lớp thuộc khối đó:','bot',true);addChatBubble(`<div class="chat-quick" style="padding:0">${KHOI.map(k=>`<button onclick="loadPublicSchedule('${k}')">Khối ${k}</button>`).join('')}</div>`,'bot',true);}
+  async function loadPublicSchedule(grade=''){if(!String(grade||'').trim()){showScheduleChoices();return;}try{const r=await callAPI('getPublicSchedule',{grade},'GET'),rows=Array.isArray(r.data)?r.data:[];if(!rows.length){addChatBubble(`Hiện Trung tâm chưa cập nhật thời khóa biểu cho Khối ${escapeHtml(grade)}.`,'bot',true);resetChatState();return;}const html=`<div class="chat-card"><h3>📅 Thời khóa biểu Khối ${escapeHtml(grade)}</h3><div class="mini-note" style="margin-bottom:9px">Hiển thị tất cả các lớp thuộc Khối ${escapeHtml(grade)}. <b>Mỗi buổi học: 1 giờ 30 phút.</b></div><div class="table-responsive"><table><thead><tr><th>Lớp</th><th>Ngày học</th><th>Thời gian học</th><th>Buổi/tuần</th><th>GV / Phòng</th><th>Tình trạng</th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${escapeHtml(x.class_info)}</b></td><td>${escapeHtml(x.days_time||'--')}</td><td><b>${escapeHtml(x.start_time||'--')}${x.end_time?' - '+escapeHtml(x.end_time):''}</b><br><span class="mini-note">1 giờ 30 phút/buổi</span></td><td style="text-align:center"><b>${Number(x.sessions_per_week||0)||'--'}</b></td><td>${escapeHtml(x.teacher||'--')} / ${escapeHtml(x.room||'--')}</td><td>${escapeHtml(x.status||'')}</td></tr>`).join('')}</tbody></table></div></div>`;addChatBubble(html,'bot',true);resetChatState();}catch(e){addChatBubble(e.message||'Không tải được lịch học.');}}
   function centerContactCardHtml(center){const c={...CENTER_INFO,...(center||{})},map=safeUrl(c.maps_url),phone=escapeHtml(c.phone||CENTER_INFO.phone),zalo=escapeHtml(c.zalo||CENTER_INFO.zalo);return `<div class="chat-card"><h3>📍 Địa chỉ & Liên hệ Trung tâm</h3><div><b>Địa chỉ:</b> ${escapeHtml(c.address||CENTER_INFO.address)}</div><div style="margin-top:5px"><b>Điện thoại:</b> ${phone}</div><div style="margin-top:5px"><b>Zalo:</b> ${zalo}</div><div class="contact-actions"><a href="tel:${phone}"><i class="bi bi-telephone-fill"></i> Gọi Trung tâm</a><a href="${map}" target="_blank" rel="noopener noreferrer"><i class="bi bi-map-fill"></i> Mở Google Maps</a></div></div>`;}
   async function showCenterContact(){resetChatState();try{const r=await callAPI('getPublicRegistrationInfo',{},'GET');addChatBubble(centerContactCardHtml(r.data?.center),'bot',true);}catch(e){addChatBubble(centerContactCardHtml(CENTER_INFO),'bot',true);}}
   async function showRegistrationGuide(){resetChatState();try{const r=await callAPI('getPublicRegistrationInfo',{},'GET'),guide=escapeHtml(r.data?.guide_text||'').replace(/\n/g,'<br>'),contact=centerContactCardHtml(r.data?.center);addChatBubble(`<div class="chat-card"><h3>📝 Thông tin đăng ký học</h3><div>${guide}</div>${contact}<form class="inline-form" onsubmit="event.preventDefault();submitPublicRegistration(this)"><input name="student_name" placeholder="Họ tên học sinh *" required><select name="grade" required><option value="">-- Khối muốn đăng ký * --</option>${KHOI.map(k=>`<option value="${k}">Khối ${k}</option>`).join('')}</select><input name="parent_phone" placeholder="SĐT phụ huynh (Zalo) *" required><select name="level"><option value="Cơ bản">Cơ bản</option><option value="Nâng cao">Nâng cao</option><option value="Cần tư vấn">Cần tư vấn</option></select><input class="full" name="note" placeholder="Học lực hiện tại / Nguyện vọng thêm"><button class="btn btn-success full" type="submit"><i class="bi bi-send-check"></i> Gửi đăng ký</button></form></div>`,'bot',true);}catch(e){addChatBubble(e.message||'Không tải được thông tin đăng ký.');}}
@@ -1273,6 +1304,7 @@
       const unpaidList = Array.isArray(r.unpaid_list) ? r.unpaid_list : [];
       const debtList = Array.isArray(r.unpaid_two_months_list) ? r.unpaid_two_months_list : [];
       const absentList = Array.isArray(r.absent_list) ? r.absent_list : [];
+      setReportCount('report-count-3', cashList.length); setReportCount('report-count-4', transferList.length); setReportCount('report-count-5', unpaidList.length); setReportCount('report-count-6', debtList.length); setReportCount('report-count-7', absentList.length);
 
       const tbCash = document.getElementById('list-tk-paid-cash');
       if(tbCash) tbCash.innerHTML = cashList.length ? cashList.map((s,i) => `<tr><td data-label="STT">${i+1}</td><td data-label="Họ tên" style="font-weight:600">${escapeHtml(s.name)}</td><td data-label="Lớp"><span class="badge badge-success">${escapeHtml(s.class_info)}</span></td><td data-label="Ngày nộp">${escapeHtml((s.paid_at||'').split(' ')[0])}</td><td data-label="Số tiền">${Number(s.amount||0).toLocaleString('vi-VN')}</td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center">Trống.</td></tr>';
@@ -1413,10 +1445,10 @@
 
   async function saveFeeSetting() { try { await callAPI('saveSettings', { tuition_amount_default: document.getElementById('hp-def').value }, 'POST'); showToast('Đã lưu mức học phí.'); } catch (error) { showError(error); } }
   async function runSetupV4() {
-    if (!confirm('Chạy setup V4.5 để tạo/migrate Scores, Schedules, Registrations và cấu hình đăng nhập?')) return;
+    if (!confirm('Chạy setup V4.6 để tạo/migrate Scores, Schedules, Registrations và cấu hình đăng nhập?')) return;
     try {
       loading(true);
-      const r = await callAPI('setupSystemV45', {}, 'POST');
+      const r = await callAPI('setupSystemV46', {}, 'POST');
       const x = r.data || {};
       showToast(`${x.message || 'Setup hoàn tất.'}${x.duplicate_queue_rows_marked ? ` Đã khóa ${x.duplicate_queue_rows_marked} dòng tin trùng.` : ''}${x.duplicate_zalo_triggers_removed ? ` Đã xóa ${x.duplicate_zalo_triggers_removed} trigger Zalo trùng.` : ''}`);
     } catch(e) { showError(e); } finally { loading(false); }
